@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="es" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#000000" />
+  <title>Plan Anual v1.5</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a84ff'/%3E%3Crect x='8' y='14' width='48' height='42' rx='6' fill='%23fff'/%3E%3Crect x='8' y='14' width='48' height='12' fill='%230055c7'/%3E%3Ccircle cx='20' cy='20' r='3' fill='%23fff'/%3E%3Ccircle cx='44' cy='20' r='3' fill='%23fff'/%3E%3Crect x='16' y='32' width='8' height='6' rx='1' fill='%230a84ff'/%3E%3Crect x='28' y='32' width='8' height='6' rx='1' fill='%2330d158'/%3E%3Crect x='40' y='32' width='8' height='6' rx='1' fill='%23ff9f0a'/%3E%3Crect x='16' y='42' width='8' height='6' rx='1' fill='%23bf5af2'/%3E%3Crect x='28' y='42' width='8' height='6' rx='1' fill='%23ff453a'/%3E%3C/svg%3E" />
+  <style>
+:root, [data-theme="light"] {
+  --bg:#f2f2f7; --grouped:#f2f2f7; --card:#fff;
+  --sep:rgba(60,60,67,.16); --text:#000; --label:#3c3c43;
+  --muted:rgba(60,60,67,.6); --blue:#007aff; --green:#34c759;
+  --red:#ff3b30; --orange:#ff9500; --fill:rgba(120,120,128,.16);
+  --fill-2:rgba(120,120,128,.12); --bar:rgba(255,255,255,.72);
+  --shadow:0 8px 30px rgba(0,0,0,.08); --weekend:#fff5f5;
+}
+[data-theme="dark"] {
+  --bg:#000; --grouped:#000; --card:#1c1c1e;
+  --sep:rgba(84,84,88,.65); --text:#fff; --label:#ebebf5;
+  --muted:rgba(235,235,245,.6); --blue:#0a84ff; --green:#30d158;
+  --red:#ff453a; --orange:#ff9f0a; --fill:rgba(120,120,128,.36);
+  --fill-2:rgba(120,120,128,.24); --bar:rgba(28,28,30,.86);
+  --shadow:0 8px 30px rgba(0,0,0,.45); --weekend:#1a1214;
+}
+* { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html, body { margin:0; height:100%; background:var(--bg); color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif; font-size:16px; }
+button, input, select, textarea { font:inherit; color:inherit; }
+.phone { max-width:none; width:100%; margin:0; min-height:100%; display:flex; flex-direction:row; }
+.tabbar { width:168px; flex-shrink:0; display:flex; flex-direction:column; gap:4px;
+  background:var(--card); border-right:.5px solid var(--sep); padding:48px 10px 16px;
+  position:sticky; top:0; align-self:stretch; min-height:100vh; }
+.tabbar button { background:none; border:0; color:var(--muted); display:flex; align-items:center; gap:10px;
+  font-size:15px; font-weight:600; cursor:pointer; text-align:left; padding:10px 12px; border-radius:12px; width:100%; }
+.tabbar button.on { color:var(--blue); background:var(--fill-2); }
+.maincol { flex:1; min-width:0; display:flex; flex-direction:column; min-height:100vh; }
+.nav-head { padding:16px 20px 8px; display:flex; align-items:flex-end; justify-content:space-between; gap:8px; }
+.large-title { font-size:32px; font-weight:700; letter-spacing:-.5px; margin:0; }
+.link { background:none; border:0; color:var(--blue); padding:6px 0; font-weight:500; cursor:pointer; }
+.scroll { flex:1; overflow:auto; padding:0 20px 40px; }
+.seg { display:flex; background:var(--fill); border-radius:9px; padding:2px; margin:8px 0 12px; overflow:auto; }
+.seg button { flex:1 0 auto; min-width:52px; border:0; background:transparent; color:var(--text); padding:6px 10px; border-radius:7px; font-size:13px; font-weight:600; cursor:pointer; }
+.seg button.on { background:var(--card); box-shadow:0 1px 4px rgba(0,0,0,.12); }
+.kpi-row { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:10px; margin-bottom:14px; }
+.kpi { background:var(--card); border-radius:16px; padding:12px 14px; box-shadow:var(--shadow); }
+.kpi .label { font-size:11px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.3px; }
+.kpi .value { font-size:22px; font-weight:700; margin-top:2px; }
+.kpi .sub { font-size:12px; color:var(--muted); }
+.group-title { font-size:13px; color:var(--muted); font-weight:500; text-transform:uppercase; letter-spacing:.4px; padding:8px 4px 6px; }
+.inset { background:var(--card); border-radius:12px; overflow:hidden; }
+.cell { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 16px; min-height:44px; border-bottom:.5px solid var(--sep); }
+.cell:last-child { border-bottom:0; }
+.year-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; }
+@media (max-width:1600px){ .year-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+@media (max-width:1200px){ .year-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media (max-width:860px){ .year-grid { grid-template-columns:1fr; } }
+@media (max-width:640px){
+  .phone { flex-direction:column; }
+  .tabbar { width:100%; min-height:0; flex-direction:row; flex-wrap:wrap; position:sticky; top:0; z-index:6;
+    padding:8px; border-right:0; border-bottom:.5px solid var(--sep); }
+}
+.month { background:var(--card); border-radius:14px; padding:12px 10px 10px; }
+.month h3 { margin:0 0 8px; text-align:left; font-size:16px; padding:0 4px; }
+.wdays { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); text-align:center; font-size:11px; color:var(--muted); font-weight:600; margin-bottom:4px; }
+.days { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:3px; }
+.day { min-height:52px; border-radius:6px; display:flex; flex-direction:column; align-items:stretch; justify-content:flex-start;
+  font-size:11px; cursor:pointer; position:relative; border:0; background:var(--fill-2); color:var(--text); padding:2px 3px; text-align:left; overflow:hidden; }
+.day.empty { cursor:default; background:transparent; min-height:52px; }
+.day.wknd { background:var(--weekend); color:var(--muted); }
+.day.hol { color:var(--red); }
+.day.today { outline:2px solid var(--blue); outline-offset:-1px; }
+.day .dnum { font-size:12px; font-weight:700; line-height:1.2; display:flex; justify-content:space-between; align-items:center; }
+.day .chips { display:flex; flex-direction:column; gap:2px; margin-top:3px; min-height:0; }
+.chip { display:block; font-size:10px; line-height:1.25; font-weight:600; border-radius:4px; padding:2px 4px; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.chip.ghost { background:transparent; color:var(--red); font-weight:600; padding:0 1px; }
+.day.night .dnum::after { content:"☾"; color:#7c5cff; font-weight:700; }
+.legend { display:flex; flex-wrap:wrap; gap:8px; margin:8px 0 14px; }
+.legend span { display:inline-flex; align-items:center; gap:6px; font-size:12px; color:var(--muted); }
+.sw { width:10px; height:10px; border-radius:50%; display:inline-block; }
+.sheet { position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:20; display:none; align-items:flex-end; justify-content:center; }
+.sheet.on { display:flex; }
+.sheet .box { background:var(--card); width:min(520px,100%); max-height:92vh; overflow:auto; border-radius:16px 16px 0 0; padding:16px 16px 28px; }
+.sheet h2 { margin:0 0 12px; font-size:20px; }
+.field { margin-bottom:10px; }
+.field label { display:block; font-size:12px; color:var(--muted); margin-bottom:4px; }
+.field input, .field select, .field textarea {
+  width:100%; background:var(--fill-2); border:0; border-radius:10px; padding:10px 12px; }
+.rowbtns { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+.btn { border:0; border-radius:12px; padding:10px 14px; font-weight:600; cursor:pointer; background:var(--fill); color:var(--text); }
+.btn.pri { background:var(--blue); color:#fff; }
+.btn.danger { background:var(--red); color:#fff; }
+.status-pill { font-size:11px; font-weight:700; padding:3px 8px; border-radius:99px; }
+.st-plan { background:#3a3a3c; color:#fff; }
+.st-com { background:#ff9f0a33; color:var(--orange); }
+.st-apr { background:#30d15833; color:var(--green); }
+.evcard { border-left:4px solid; padding:8px 10px; border-radius:8px; background:var(--fill-2); margin:6px 0; }
+.lock {
+  position:fixed; inset:0; z-index:40; background:var(--bg); display:flex; align-items:center; justify-content:center;
+}
+.lock .card { width:min(360px,92vw); background:var(--card); border-radius:16px; padding:24px 20px; box-shadow:var(--shadow); }
+.lock h2 { margin:0 0 8px; }
+.lock p { color:var(--muted); font-size:14px; margin:0 0 14px; }
+.lock input { width:100%; background:var(--fill-2); border:0; border-radius:10px; padding:12px; margin-bottom:10px; letter-spacing:2px; }
+.lock .err { color:var(--red); font-size:13px; min-height:18px; }
+.alertbox { position:fixed; inset:0; z-index:30; background:rgba(0,0,0,.45); display:none; align-items:center; justify-content:center; }
+.alertbox.on { display:flex; }
+.alertbox .card { width:min(520px,94vw); max-height:80vh; overflow:auto; background:var(--card); border-radius:16px; padding:20px; }
+.logo { width:36px; height:36px; display:block; flex-shrink:0; }
+.logo.lg { width:56px; height:56px; margin:0 auto 12px; }
+.brand { display:flex; align-items:center; gap:10px; padding:0 8px 16px; }
+.brand span { font-weight:700; font-size:15px; color:var(--text); line-height:1.15; }
+.lock .card { text-align:center; }
+
+@media print {
+  @page { size: A4 landscape; margin: 6mm; }
+  html, body {
+    background: #fff !important;
+    color: #111 !important;
+    height: 100% !important;
+    margin: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .tabbar, .sheet, .link, .nav-head, .lock, .alertbox, .kpi-row, .legend, .year-grid, #view { display: none !important; }
+  .phone, .maincol { display: block; width: 100%; height: 100%; }
+  .scroll { display: block; width: 100%; height: 100%; overflow: visible; padding: 0; }
+  #printSheet { display: flex !important; flex-direction: column; height: 100%; width: 100%; }
+  .print-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 4px; }
+  .print-title { font-size: 14px; font-weight: 700; margin: 0; }
+  .print-kpis { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 8px; }
+  .print-kpis b { font-size: 11px; }
+  .print-legend { display: flex; flex-wrap: wrap; gap: 8px; font-size: 8px; margin-bottom: 4px; }
+  .print-legend span { display: inline-flex; align-items: center; gap: 3px; }
+  .print-table { width: 100%; height: 100%; border-collapse: collapse; font-size: 7px; table-layout: fixed; }
+  .print-table th, .print-table td { border: 0.4px solid #bbb; text-align: center; padding: 0; position: relative; vertical-align: top; }
+  .print-table th { background: #eee; font-weight: 600; height: 14px; }
+  .print-month { text-align: left !important; padding-left: 3px !important; font-weight: 700; white-space: nowrap; width: 36px; background: #f7f7f7; font-size: 8px; }
+  .print-wknd { background: #f0f0f0; color: #999; }
+  .print-hol { color: #111; font-weight: 700; }
+  .print-event { color: #111; font-weight: 600; }
+  .print-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 25%; opacity: 0.5; }
+  .print-wd { display: block; font-size: 6px; line-height: 1; color: #666; }
+  .print-night { box-shadow: inset 0 0 0 1.5px #7c5cff; }
+  .print-trips { margin-top: 4px; font-size: 8px; }
+  .print-trips table { width: 100%; border-collapse: collapse; }
+  .print-trips th, .print-trips td { border: 0.4px solid #ccc; padding: 2px 4px; text-align: left; }
+}
+</style>
+</head>
+<body>
+<div class="phone">
+  <nav class="tabbar">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="14" fill="#0a84ff"/>
+        <rect x="8" y="14" width="48" height="42" rx="6" fill="#fff"/>
+        <rect x="8" y="14" width="48" height="12" fill="#0055c7"/>
+        <circle cx="20" cy="20" r="3" fill="#fff"/>
+        <circle cx="44" cy="20" r="3" fill="#fff"/>
+        <rect x="16" y="32" width="8" height="6" rx="1" fill="#0a84ff"/>
+        <rect x="28" y="32" width="8" height="6" rx="1" fill="#30d158"/>
+        <rect x="40" y="32" width="8" height="6" rx="1" fill="#ff9f0a"/>
+        <rect x="16" y="42" width="8" height="6" rx="1" fill="#bf5af2"/>
+        <rect x="28" y="42" width="8" height="6" rx="1" fill="#ff453a"/>
+      </svg>
+      <span id="brandName">Plan anual</span>
+      <span id="brandVer" style="font-size:11px;color:var(--muted);font-weight:500">v1.5</span>
+    </div>
+    <button class="on" data-tab="plan" onclick="go('plan')" id="tab-plan">Calendario</button>
+    <button data-tab="totales" onclick="go('totales')" id="tab-totales">Totales</button>
+    <button data-tab="viajes" onclick="go('viajes')" id="tab-viajes">Viajes</button>
+    <button data-tab="tipos" onclick="go('tipos')" id="tab-tipos">Tipos</button>
+    <button data-tab="opciones" onclick="go('opciones')" id="tab-opciones">Opciones</button>
+  </nav>
+  <div class="maincol">
+    <div class="nav-head">
+      <h1 class="large-title" id="title">Plan anual</h1>
+      <button class="link" onclick="shiftYear(-1)">‹</button>
+      <button class="link" id="yearBtn" onclick="void 0"></button>
+      <button class="link" onclick="shiftYear(1)">›</button>
+      <button class="link" id="btnExport" onclick="exportJSON()">Exportar</button>
+      <button class="link" id="btnImport" onclick="importFromFolderOrFile()">Importar</button>
+      <button class="link" id="btnPrint" onclick="printPlan()">Imprimir PDF</button>
+      <button class="link" id="btnGCal" onclick="importGoogleCal()">Google Cal</button>
+    </div>
+    <div class="scroll" id="view"></div>
+    <div id="printSheet" style="display:none"></div>
+  </div>
+</div>
+
+<div class="sheet" id="sheet" onclick="if(event.target===this)closeSheet()">
+  <div class="box" id="sheetBox"></div>
+</div>
+<div class="alertbox" id="pendingBox" onclick="if(event.target===this)this.classList.remove('on')">
+  <div class="card" id="pendingCard"></div>
+</div>
+
+<script>
+const LS = 'planAnual.v1';
+const APP_VER = '1.5';
+const I18N = {
+  es: {
+    calendar:'Calendario', totals:'Totales', types:'Tipos', options:'Opciones',
+    annualPlan:'Plan anual', eventTypes:'Tipos de evento',
+    workdays:'Días hábiles en trabajo', nights:'Noches marcadas', holidays:'Feriados',
+    workdaysFull:'Días hábiles trabajando', workdaysHint:'L–V menos feriados y ausencias',
+    nightShifts:'Turnos noche', weekends:'Fines de semana',
+    byType:'Por tipo de evento', listYear:'Listado', noEventsYear:'Sin eventos este año',
+    plan:'plan', com:'com.', apr:'apr.',
+    planned:'planificados', communicated:'comunicados', approved:'aprobados',
+    stPlanned:'Planificado', stComm:'Comunicado al empleador', stApr:'Aprobado por empleador',
+    typesHint:'Define tipos (vacaciones, permiso…). Cada uno tiene nombre y color. Al crear un evento eliges el tipo y luego avanzas el estado: planificado → comunicado al empleador → aprobado.',
+    delete:'Eliminar', addType:'+ Tipo', newType:'Nuevo tipo',
+    countryHol:'País (feriados nacionales)', weekMon:'Semana empieza en lunes',
+    nightCounts:'Noche cuenta como trabajo', nightCountsHint:'Informativo; no resta días hábiles',
+    theme:'Tema', themeDark:'Oscuro', themeLight:'Claro',
+    language:'Idioma', extraHol:'Feriados adicionales (locales)',
+    extraHolHint:'Añade fiestas locales, patronales o de empresa que no están en el calendario nacional. Cuentan como no laborables.',
+    addHol:'Añadir feriado', holName:'Nombre', holDate:'Fecha',
+    exportImport:'Exportar / importar plan', downloadJson:'Exportar plan', importJson:'Importar plan',
+    folder:'Carpeta de planes', pickFolder:'Elegir carpeta', folderHint:'Elige una carpeta. Al exportar se guarda ahí; al abrir o pulsar Importar se carga el JSON más reciente.',
+    folderOk:'Carpeta lista', noFolder:'Sin carpeta (se descarga el archivo)',
+    gcalImport:'Importar Google Calendar (.ics)', gcalUpdate:'Actualizar desde Google',
+    gcalOk:'Calendario Google importado', gcalFail:'No se pudo leer el .ics',
+    tripSummary:'Viajes planificados',
+    calSection:'Calendario', downloadIcs:'Descargar .ics', openGoogle:'Abrir en Google Calendar',
+    printPdf:'Imprimir / PDF (fondo blanco)',
+    lockTitle:'Plan anual bloqueado', lockHint:'Introduce la contraseña', unlock:'Desbloquear',
+    badPass:'Contraseña incorrecta', passSection:'Contraseña',
+    currentPass:'Actual', newPass:'Nueva', changePass:'Cambiar contraseña',
+    passChanged:'Contraseña actualizada', passNeedCurrent:'La contraseña actual no es correcta',
+    passNeedNew:'Escribe una contraseña nueva',
+    pendingTitle:'Eventos aún en PLAN', pendingHint:'Estos días siguen planificados: no se han comunicado al empleador ni están aprobados.',
+    pendingNone:'No hay eventos pendientes de comunicar.',
+    lockNow:'Bloquear ahora', idleLock:'Se bloquea a los 5 min de inactividad',
+    ok:'Entendido',
+    trips:'Viajes', newTrip:'Nuevo viaje', tripName:'Nombre del viaje', dest:'Destino (ciudad)',
+    period:'Periodo', from:'Desde', to:'Hasta', saveTrip:'Guardar viaje',
+    flights:'Vuelos', addFlight:'Añadir vuelo a mano', lookupFlight:'Buscar por número',
+    flightNo:'Número de vuelo', flightDate:'Fecha', depAirport:'Origen (IATA)',
+    arrAirport:'Destino (IATA)', depTime:'Salida', arrTime:'Llegada',
+    noTrips:'No hay viajes planificados.', dayPlan:'Notas por día',
+    weather:'Meteorología', weatherForecast:'Pronóstico', weatherAvg:'Media climática (años previos)',
+    weatherLoading:'Cargando clima…', weatherFail:'No se pudo cargar el clima',
+    lookupFail:'No se encontró el vuelo. Complétalo a mano.',
+    lookupOk:'Vuelo encontrado', avKey:'Clave Aviationstack (opcional, para buscar vuelos)',
+    avKeyHint:'Sin clave puedes cargar vuelos a mano. Con clave gratuita de aviationstack.com se busca por número.',
+    onCal:'En el calendario anual cada viaje se marca de forma simple en todos los días del periodo.',
+    deleteTrip:'Eliminar viaje', tripDays:'días',
+    googleHint:'Google Calendar no permite escribir en tu cuenta desde un HTML local sin OAuth. El botón genera un .ics y abre la importación de Google Calendar.',
+    holiday:'Feriado', night:'Noche', noEvents:'Sin eventos.',
+    nightShift:'Turno de noche', addEvent:'Añadir evento', type:'Tipo', note:'Nota',
+    notesPh:'Notas libres…', add:'Añadir', close:'Cerrar', remove:'Quitar',
+    typeDeleted:'Tipo eliminado', event:'Evento',
+    imported:'Plan importado', badJson:'JSON no válido',
+    exported:'Plan exportado',
+    ghTitle:'Almacenamiento GitHub',
+    ghHint:'Token personal (scope repo). El plan se guarda en un JSON del repositorio y se carga al abrir.',
+    ghOwner:'Usuario', ghRepo:'Repositorio', ghPath:'Ruta del JSON', ghBranch:'Rama', ghToken:'Token',
+    ghSave:'Guardar en GitHub', ghLoad:'Cargar desde GitHub',
+    ghOk:'Guardado en GitHub', ghLoadOk:'Cargado desde GitHub', ghFail:'Error de GitHub',
+    sbTitle:'Almacenamiento Supabase',
+    sbHint:'URL del proyecto y clave anon. Los cambios se guardan en la tabla plan.',
+    sbUrl:'URL', sbKey:'Clave anon', sbSave:'Guardar en Supabase', sbLoad:'Cargar desde Supabase',
+    sbOk:'Guardado en Supabase', sbLoadOk:'Cargado desde Supabase', sbFail:'Error de Supabase',
+    delTypeQ:'¿Eliminar este tipo? Los eventos que lo usen quedarán sin tipo.',
+    googleAlert:'Se descargó el .ics. En Google Calendar usa Importar y elige el archivo.',
+    printTitle:'Plan anual',
+    countries:{ES:'España',IT:'Italia',AR:'Argentina',MX:'México',FR:'Francia',DE:'Alemania',PT:'Portugal',CO:'Colombia',CL:'Chile',US:'Estados Unidos',PE:'Perú'}
+  },
+  en: {
+    calendar:'Calendar', totals:'Totals', types:'Types', options:'Options',
+    annualPlan:'Annual plan', eventTypes:'Event types',
+    workdays:'Working days on site', nights:'Night shifts marked', holidays:'Holidays',
+    workdaysFull:'Working days on site', workdaysHint:'Mon–Fri minus holidays and leave',
+    nightShifts:'Night shifts', weekends:'Weekends',
+    byType:'By event type', listYear:'List', noEventsYear:'No events this year',
+    plan:'planned', com:'notified', apr:'approved',
+    planned:'planned', communicated:'notified', approved:'approved',
+    stPlanned:'Planned', stComm:'Notified to employer', stApr:'Approved by employer',
+    typesHint:'Define types (vacation, leave…). Each has a name and color. After creating an event you move its status: planned → notified to employer → approved.',
+    delete:'Delete', addType:'+ Type', newType:'New type',
+    countryHol:'Country (national holidays)', weekMon:'Week starts on Monday',
+    nightCounts:'Night counts as work', nightCountsHint:'Informational; does not reduce working days',
+    theme:'Theme', themeDark:'Dark', themeLight:'Light',
+    language:'Language', extraHol:'Additional holidays (local)',
+    extraHolHint:'Add local, patron-saint or company holidays missing from the national calendar. They count as non-working days.',
+    addHol:'Add holiday', holName:'Name', holDate:'Date',
+    exportImport:'Export / import plan', downloadJson:'Export plan', importJson:'Import plan',
+    folder:'Plans folder', pickFolder:'Choose folder', folderHint:'Pick a folder. Export saves there; on open or Import the newest JSON is loaded.',
+    folderOk:'Folder ready', noFolder:'No folder (file will download)',
+    gcalImport:'Import Google Calendar (.ics)', gcalUpdate:'Update from Google',
+    gcalOk:'Google Calendar imported', gcalFail:'Could not read .ics',
+    tripSummary:'Planned trips',
+    calSection:'Calendar', downloadIcs:'Download .ics', openGoogle:'Open in Google Calendar',
+    printPdf:'Print / PDF (white background)',
+    lockTitle:'Annual plan locked', lockHint:'Enter the password', unlock:'Unlock',
+    badPass:'Wrong password', passSection:'Password',
+    currentPass:'Current', newPass:'New', changePass:'Change password',
+    passChanged:'Password updated', passNeedCurrent:'Current password is not correct',
+    passNeedNew:'Type a new password',
+    pendingTitle:'Events still PLANNED', pendingHint:'These days are still planned: not notified to the employer and not approved.',
+    pendingNone:'No events pending notification.',
+    lockNow:'Lock now', idleLock:'Locks after 5 minutes idle',
+    ok:'Got it',
+    trips:'Trips', newTrip:'New trip', tripName:'Trip name', dest:'Destination (city)',
+    period:'Period', from:'From', to:'To', saveTrip:'Save trip',
+    flights:'Flights', addFlight:'Add flight manually', lookupFlight:'Search by flight number',
+    flightNo:'Flight number', flightDate:'Date', depAirport:'Origin (IATA)',
+    arrAirport:'Destination (IATA)', depTime:'Departure', arrTime:'Arrival',
+    noTrips:'No planned trips.', dayPlan:'Notes by day',
+    weather:'Weather', weatherForecast:'Forecast', weatherAvg:'Climate average (past years)',
+    weatherLoading:'Loading weather…', weatherFail:'Could not load weather',
+    lookupFail:'Flight not found. Fill it in manually.',
+    lookupOk:'Flight found', avKey:'Aviationstack key (optional, flight lookup)',
+    avKeyHint:'Without a key you add flights by hand. A free key from aviationstack.com enables search by number.',
+    onCal:'On the year calendar each trip is marked simply on every day of the period.',
+    deleteTrip:'Delete trip', tripDays:'days',
+    googleHint:'Google Calendar cannot be written from a local HTML file without OAuth. The button builds an .ics and opens Google Calendar import.',
+    holiday:'Holiday', night:'Night', noEvents:'No events.',
+    nightShift:'Night shift', addEvent:'Add event', type:'Type', note:'Note',
+    notesPh:'Free notes…', add:'Add', close:'Close', remove:'Remove',
+    typeDeleted:'Deleted type', event:'Event',
+    imported:'Plan imported', badJson:'Invalid JSON',
+    exported:'Plan exported',
+    ghTitle:'GitHub storage',
+    ghHint:'Personal token (repo scope). The plan is saved as JSON in the repository and loaded on open.',
+    ghOwner:'User', ghRepo:'Repository', ghPath:'JSON path', ghBranch:'Branch', ghToken:'Token',
+    ghSave:'Save to GitHub', ghLoad:'Load from GitHub',
+    ghOk:'Saved to GitHub', ghLoadOk:'Loaded from GitHub', ghFail:'GitHub error',
+    sbTitle:'Supabase storage',
+    sbHint:'Project URL and anon key. Changes are saved to the plan table.',
+    sbUrl:'URL', sbKey:'Anon key', sbSave:'Save to Supabase', sbLoad:'Load from Supabase',
+    sbOk:'Saved to Supabase', sbLoadOk:'Loaded from Supabase', sbFail:'Supabase error',
+    delTypeQ:'Delete this type? Events using it will have no type.',
+    googleAlert:'The .ics was downloaded. In Google Calendar use Import and pick the file.',
+    printTitle:'Annual plan',
+    countries:{ES:'Spain',IT:'Italy',AR:'Argentina',MX:'Mexico',FR:'France',DE:'Germany',PT:'Portugal',CO:'Colombia',CL:'Chile',US:'United States',PE:'Peru'}
+  }
+};
+const MONTHS = {
+  es:['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+  en:['January','February','March','April','May','June','July','August','September','October','November','December']
+};
+const WDAYS = { es:['L','M','X','J','V','S','D'], en:['M','T','W','T','F','S','S'] };
+function t(k){ return (I18N[state.lang]||I18N.es)[k] || I18N.es[k] || k; }
+function countryName(code){ return t('countries')[code] || code; }
+
+const DEFAULT_TYPES = [
+  { id:'vac', name:'Vacaciones', color:'#0a84ff' },
+  { id:'per', name:'Permiso / día libre', color:'#30d158' },
+  { id:'for', name:'Formación', color:'#bf5af2' },
+  { id:'baj', name:'Baja / enfermedad', color:'#ff9f0a' },
+  { id:'via', name:'Viaje trabajo', color:'#64d2ff' }
+];
+
+function easter(y){
+  const a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),
+    g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,
+    l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),
+    month=Math.floor((h+l-7*m+114)/31),day=((h+l-7*m+114)%31)+1;
+  return new Date(Date.UTC(y,month-1,day));
+}
+function iso(d){ return d.toISOString().slice(0,10); }
+function addDays(d,n){ const x=new Date(d); x.setUTCDate(x.getUTCDate()+n); return x; }
+function md(y,m,d){ return iso(new Date(Date.UTC(y,m-1,d))); }
+
+function holidays(code, year){
+  const E = easter(year);
+  const map = {
+    ES: [
+      [md(year,1,1),'Año Nuevo'],[md(year,1,6),'Reyes'],
+      [iso(addDays(E,-2)),'Viernes Santo'],[md(year,5,1),'Trabajo'],
+      [md(year,8,15),'Asunción'],[md(year,10,12),'Fiesta Nacional'],
+      [md(year,11,1),'Todos los Santos'],[md(year,12,6),'Constitución'],
+      [md(year,12,8),'Inmaculada'],[md(year,12,25),'Navidad']
+    ],
+    IT: [
+      [md(year,1,1),'Capodanno'],[md(year,1,6),'Epifania'],
+      [iso(E),'Pasqua'],[iso(addDays(E,1)),'Lunedì dell\'Angelo'],
+      [md(year,4,25),'Liberazione'],[md(year,5,1),'Lavoro'],
+      [md(year,6,2),'Repubblica'],[md(year,8,15),'Ferragosto'],
+      [md(year,11,1),'Ognissanti'],[md(year,12,8),'Immacolata'],
+      [md(year,12,25),'Natale'],[md(year,12,26),'Santo Stefano']
+    ],
+    AR: [
+      [md(year,1,1),'Año Nuevo'],[iso(addDays(E,-2)),'Viernes Santo'],
+      [md(year,3,24),'Memoria'],[md(year,4,2),'Malvinas'],
+      [md(year,5,1),'Trabajo'],[md(year,5,25),'Revolución de Mayo'],
+      [md(year,6,20),'Belgrano'],[md(year,7,9),'Independencia'],
+      [md(year,8,17),'San Martín'],[md(year,10,12),'Diversidad'],
+      [md(year,11,20),'Soberanía'],[md(year,12,8),'Inmaculada'],[md(year,12,25),'Navidad']
+    ],
+    MX: [
+      [md(year,1,1),'Año Nuevo'],[md(year,2,5),'Constitución'],
+      [md(year,3,21),'Benito Juárez'],[md(year,5,1),'Trabajo'],
+      [md(year,9,16),'Independencia'],[md(year,11,20),'Revolución'],
+      [md(year,12,25),'Navidad']
+    ],
+    FR: [
+      [md(year,1,1),'Jour de l\'an'],[iso(E),'Pâques'],[iso(addDays(E,1)),'Lundi de Pâques'],
+      [md(year,5,1),'Travail'],[md(year,5,8),'Victoire'],[iso(addDays(E,39)),'Ascension'],
+      [iso(addDays(E,50)),'Pentecôte'],[md(year,7,14),'Bastille'],
+      [md(year,8,15),'Assomption'],[md(year,11,1),'Toussaint'],
+      [md(year,11,11),'Armistice'],[md(year,12,25),'Noël']
+    ],
+    DE: [
+      [md(year,1,1),'Neujahr'],[iso(addDays(E,-2)),'Karfreitag'],[iso(E),'Ostern'],
+      [iso(addDays(E,1)),'Ostermontag'],[md(year,5,1),'Tag der Arbeit'],
+      [iso(addDays(E,39)),'Christi Himmelfahrt'],[iso(addDays(E,50)),'Pfingstmontag'],
+      [md(year,10,3),'Tag der Deutschen Einheit'],[md(year,12,25),'1. Weihnachtstag'],
+      [md(year,12,26),'2. Weihnachtstag']
+    ],
+    PT: [
+      [md(year,1,1),'Ano Novo'],[iso(addDays(E,-2)),'Sexta-feira Santa'],[iso(E),'Páscoa'],
+      [md(year,4,25),'Liberdade'],[md(year,5,1),'Trabalhador'],[md(year,6,10),'Portugal'],
+      [md(year,8,15),'Assunção'],[md(year,10,5),'Implantação da República'],
+      [md(year,11,1),'Todos os Santos'],[md(year,12,1),'Restauração'],
+      [md(year,12,8),'Imaculada'],[md(year,12,25),'Natal']
+    ],
+    CO: [
+      [md(year,1,1),'Año Nuevo'],[md(year,5,1),'Trabajo'],[md(year,7,20),'Independencia'],
+      [md(year,8,7),'Boyacá'],[md(year,12,8),'Inmaculada'],[md(year,12,25),'Navidad']
+    ],
+    CL: [
+      [md(year,1,1),'Año Nuevo'],[iso(addDays(E,-2)),'Viernes Santo'],[iso(addDays(E,-1)),'Sábado Santo'],
+      [md(year,5,1),'Trabajo'],[md(year,5,21),'Glorias Navales'],[md(year,9,18),'Independencia'],
+      [md(year,9,19),'Glorias del Ejército'],[md(year,12,8),'Inmaculada'],[md(year,12,25),'Navidad']
+    ],
+    US: [
+      [md(year,1,1),'New Year'],[md(year,7,4),'Independence Day'],
+      [md(year,11,11),'Veterans Day'],[md(year,12,25),'Christmas']
+    ],
+    PE: [
+      [md(year,1,1),'Año Nuevo'],[iso(addDays(E,-3)),'Jueves Santo'],[iso(addDays(E,-2)),'Viernes Santo'],
+      [md(year,5,1),'Trabajo'],[md(year,7,28),'Independencia'],[md(year,7,29),'Independencia'],
+      [md(year,8,30),'Santa Rosa'],[md(year,10,8),'Combate de Angamos'],
+      [md(year,11,1),'Todos los Santos'],[md(year,12,8),'Inmaculada'],[md(year,12,25),'Navidad']
+    ]
+  };
+  return Object.fromEntries(map[code] || map.ES);
+}
+
+function uid(){ return Math.random().toString(36).slice(2,10); }
+
+const state = {
+  year: 2026,
+  country: 'ES',
+  weekStartsMonday: true,
+  nightIsWork: true,
+  theme: 'dark',
+  lang: 'es',
+  extraHolidays: [],
+  types: JSON.parse(JSON.stringify(DEFAULT_TYPES)),
+  events: [],
+  trips: [],
+  aviationKey: '',
+  gh: { owner:'', repo:'', path:'data/plan.json', branch:'main', token:'' },
+  sb: { url:'', key:'' },
+  tab: 'plan'
+};
+
+function load(){
+  try {
+    const raw = localStorage.getItem(LS);
+    if (raw) Object.assign(state, JSON.parse(raw));
+    if (!Array.isArray(state.trips)) state.trips = [];
+  } catch(e){}
+}
+function save(){
+  localStorage.setItem(LS, JSON.stringify({
+    year:state.year, country:state.country, weekStartsMonday:state.weekStartsMonday,
+    nightIsWork:state.nightIsWork, theme:state.theme, lang:state.lang,
+    extraHolidays:state.extraHolidays, types:state.types, events:state.events,
+    trips:state.trips||[], aviationKey:state.aviationKey||'',
+    gh: state.gh || { owner:'', repo:'', path:'data/plan.json', branch:'main', token:'' },
+    sb: state.sb || { url:'', key:'' }
+  }));
+  scheduleGhSync();
+  scheduleSbSync();
+}
+function applyChrome(){
+  document.documentElement.setAttribute('data-theme', state.theme==='light'?'light':'dark');
+  document.documentElement.lang = state.lang==='en'?'en':'es';
+  const bar = document.querySelector('.tabbar');
+  if (bar) {
+    const on = document.querySelector('.tabbar button.on')?.dataset.tab;
+    document.getElementById('tab-plan').textContent = t('calendar');
+    document.getElementById('tab-totales').textContent = t('totals');
+    const tv = document.getElementById('tab-viajes');
+    if (tv) tv.textContent = t('trips');
+    document.getElementById('tab-tipos').textContent = t('types');
+    document.getElementById('tab-opciones').textContent = t('options');
+    document.getElementById('btnPrint').textContent = t('printPdf');
+    const be = document.getElementById('btnExport'); if (be) be.textContent = t('downloadJson');
+    const bi = document.getElementById('btnImport'); if (bi) bi.textContent = t('importJson');
+    const bg = document.getElementById('btnGCal'); if (bg) bg.textContent = t('gcalUpdate');
+    const bv = document.getElementById('brandVer'); if (bv) bv.textContent = 'v'+APP_VER;
+    if (on) document.querySelectorAll('.tabbar button').forEach(b=>b.classList.toggle('on', b.dataset.tab===on));
+  }
+}
+
+function typeById(id){ return state.types.find(t=>t.id===id); }
+function eventsOn(date){ return state.events.filter(e=>e.date===date); }
+function holMap(){
+  const base = holidays(state.country, state.year);
+  (state.extraHolidays||[]).forEach(h => {
+    if (h && h.date) base[h.date] = h.name || t('holiday');
+  });
+  return base;
+}
+
+function isWeekend(dateStr){
+  const d = new Date(dateStr+'T12:00:00');
+  const w = d.getDay();
+  return w===0 || w===6;
+}
+function isWorkday(dateStr){
+  if (isWeekend(dateStr)) return false;
+  if (holMap()[dateStr]) return false;
+  const evs = eventsOn(dateStr);
+  const off = evs.some(e => {
+    const t = typeById(e.typeId);
+    return t && (t.id==='vac' || t.id==='per' || t.id==='baj' || /vac|permiso|baja|libre/i.test(t.name));
+  });
+  return !off;
+}
+
+function stats(){
+  const hol = holMap();
+  let work=0, nights=0, hols=0, weekends=0;
+  const byType = {};
+  state.types.forEach(t => byType[t.id]={name:t.name,color:t.color,days:0,plan:0,com:0,apr:0});
+  const y = state.year;
+  const start = new Date(Date.UTC(y,0,1));
+  const end = new Date(Date.UTC(y,11,31));
+  for (let d=new Date(start); d<=end; d.setUTCDate(d.getUTCDate()+1)){
+    const ds = iso(d);
+    if (hol[ds]) hols++;
+    if (isWeekend(ds)) weekends++;
+    if (isWorkday(ds)) work++;
+  }
+  const seenNight = new Set();
+  state.events.forEach(e => {
+    if (!e.date.startsWith(String(y))) return;
+    if (byType[e.typeId]) {
+      byType[e.typeId].days++;
+      if (e.status==='planificado') byType[e.typeId].plan++;
+      if (e.status==='comunicado') byType[e.typeId].com++;
+      if (e.status==='aprobado') byType[e.typeId].apr++;
+    }
+    if (e.night && !seenNight.has(e.date)) { nights++; seenNight.add(e.date); }
+  });
+  // nights marked even without event
+  state.events.filter(e=>e.night && e.date.startsWith(String(y))).forEach(()=>{});
+  return {work, nights, hols, weekends, byType};
+}
+
+function shiftYear(n){ state.year += n; save(); render(); }
+
+function go(tab){
+  state.tab = tab;
+  document.querySelectorAll('.tabbar button').forEach(b=>b.classList.toggle('on', b.dataset.tab===tab));
+  render();
+}
+
+function render(){
+  applyChrome();
+  document.getElementById('yearBtn').textContent = state.year;
+  const titles = {plan:t('annualPlan'), totales:t('totals'), viajes:t('trips'), tipos:t('eventTypes'), opciones:t('options')};
+  document.getElementById('title').textContent = titles[state.tab] || t('annualPlan');
+  const v = document.getElementById('view');
+  if (state.tab==='plan') v.innerHTML = renderPlan();
+  else if (state.tab==='totales') v.innerHTML = renderTotales();
+  else if (state.tab==='viajes') v.innerHTML = renderViajes();
+  else if (state.tab==='tipos') v.innerHTML = renderTipos();
+  else v.innerHTML = renderOpciones();
+}
+
+function renderPlan(){
+  const s = stats();
+  const hol = holMap();
+  let kpi = `<div class="kpi-row">
+    <div class="kpi"><div class="label">${t('workdays')}</div><div class="value">${s.work}</div><div class="sub">${countryName(state.country)} ${state.year}</div></div>
+    <div class="kpi"><div class="label">${t('nights')}</div><div class="value">${s.nights}</div></div>
+    <div class="kpi"><div class="label">${t('holidays')}</div><div class="value">${s.hols}</div></div>`;
+  Object.values(s.byType).forEach(tp=>{
+    if (tp.days) kpi += `<div class="kpi"><div class="label">${esc(tp.name)}</div><div class="value" style="color:${tp.color}">${tp.days}</div>
+      <div class="sub">${tp.plan} ${t('plan')} · ${tp.com} ${t('com')} · ${tp.apr} ${t('apr')}</div></div>`;
+  });
+  kpi += `</div>`;
+  let legend = `<div class="legend">
+    <span><i class="sw" style="background:#ff453a"></i> ${t('holiday')}</span>
+    <span><i class="sw" style="background:#7c5cff"></i> ${t('night')}</span>`;
+  state.types.forEach(tp=> legend += `<span><i class="sw" style="background:${tp.color}"></i> ${esc(tp.name)}</span>`);
+  if ((state.trips||[]).length) legend += `<span><i class="sw" style="background:#64d2ff"></i> ✈ ${t('trips')}</span>`;
+  legend += `</div>`;
+
+  let grid = `<div class="year-grid">`;
+  for (let m=0;m<12;m++){
+    const first = new Date(state.year, m, 1);
+    let startPad = first.getDay(); // 0 sun
+    if (state.weekStartsMonday) startPad = (startPad+6)%7;
+    const dim = new Date(state.year, m+1, 0).getDate();
+    grid += `<div class="month"><h3>${MONTHS[state.lang][m]}</h3><div class="wdays">${WDAYS[state.lang].map(w=>`<span>${w}</span>`).join('')}</div><div class="days">`;
+    for (let i=0;i<startPad;i++) grid += `<div class="day empty"></div>`;
+    for (let d=1;d<=dim;d++){
+      const ds = `${state.year}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const evs = eventsOn(ds);
+      const wkd = isWeekend(ds);
+      const isHol = !!hol[ds];
+      const today = iso(new Date())===ds;
+      const night = evs.some(e=>e.night) || (state._nights && state._nights[ds]);
+      const cls = ['day', wkd?'wknd':'', isHol?'hol':'', today?'today':'', night?'night':''].filter(Boolean).join(' ');
+      const stShort = {planificado:'P', comunicado:'C', aprobado:'A'};
+      let chips = '';
+      if (isHol) chips += `<span class="chip ghost">${esc(hol[ds])}</span>`;
+      tripsOn(ds).forEach(tr=>{
+        chips += `<span class="chip" style="background:#64d2ff;color:#00344d">✈ ${esc(tr.name||tr.dest||t('trips'))}</span>`;
+      });
+      evs.forEach(e=>{
+        const tp = typeById(e.typeId);
+        const label = `${tp?tp.name:t('event')} · ${stShort[e.status]||e.status}${e.note? ' · '+e.note:''}`;
+        chips += `<span class="chip" style="background:${tp?tp.color:'#636366'}">${esc(label)}</span>`;
+      });
+      const title = [isHol?hol[ds]:'', ...evs.map(e=>{
+        const tp=typeById(e.typeId); return tp?`${tp.name} (${e.status})${e.note?' — '+e.note:''}`:e.status;
+      })].filter(Boolean).join(' · ');
+      grid += `<button class="${cls}" title="${esc(title)}" onclick="openDay('${ds}')"><span class="dnum">${d}</span><span class="chips">${chips}</span></button>`;
+    }
+    grid += `</div></div>`;
+  }
+  grid += `</div>`;
+  return kpi + legend + grid;
+}
+
+function renderTotales(){
+  const s = stats();
+  let html = `<div class="kpi-row">
+    <div class="kpi"><div class="label">${t('workdaysFull')}</div><div class="value">${s.work}</div><div class="sub">${t('workdaysHint')}</div></div>
+    <div class="kpi"><div class="label">${t('nightShifts')}</div><div class="value">${s.nights}</div></div>
+    <div class="kpi"><div class="label">${t('holidays')} ${countryName(state.country)}</div><div class="value">${s.hols}</div></div>
+    <div class="kpi"><div class="label">${t('weekends')}</div><div class="value">${s.weekends}</div></div>
+  </div><div class="group-title">${t('byType')}</div><div class="inset">`;
+  Object.values(s.byType).forEach(tp=>{
+    html += `<div class="cell"><div class="left"><div class="name">${esc(tp.name)}</div>
+      <div class="meta">${tp.plan} ${t('planned')} · ${tp.com} ${t('communicated')} · ${tp.apr} ${t('approved')}</div></div>
+      <div style="font-weight:700;color:${tp.color}">${tp.days} d</div></div>`;
+  });
+  html += `</div><div class="group-title">${t('listYear')} ${state.year}</div><div class="inset">`;
+  const list = state.events.filter(e=>e.date.startsWith(String(state.year))).sort((a,b)=>a.date.localeCompare(b.date));
+  if (!list.length) html += `<div class="cell"><div class="meta">${t('noEventsYear')}</div></div>`;
+  list.forEach(e=>{
+    const t = typeById(e.typeId);
+    html += `<div class="cell"><div class="left"><div class="name">${e.date} · ${esc(t?t.name:'?')} ${e.night?'🌙':''}</div>
+      <div class="meta">${esc(e.note||'')}</div></div>
+      <span class="status-pill ${e.status==='aprobado'?'st-apr':e.status==='comunicado'?'st-com':'st-plan'}">${statusLabel(e.status)}</span></div>`;
+  });
+  html += `</div>`;
+  return html;
+}
+
+function statusLabel(st){
+  if (st==='comunicado') return t('stComm');
+  if (st==='aprobado') return t('stApr');
+  return t('stPlanned');
+}
+
+function renderTipos(){
+  let html = `<p style="color:var(--muted);font-size:14px">${t('typesHint')}</p><div class="inset">`;
+  state.types.forEach(tp=>{
+    html += `<div class="cell">
+      <div class="left" style="flex-direction:row;align-items:center;gap:10px">
+        <input type="color" value="${tp.color}" onchange="updType('${tp.id}','color',this.value)" style="width:36px;height:28px;border:0;background:none">
+        <input value="${esc(tp.name)}" onchange="updType('${tp.id}','name',this.value)" style="background:var(--fill-2);border:0;border-radius:8px;padding:6px 8px">
+      </div>
+      <button class="link" onclick="delType('${tp.id}')">${t('delete')}</button>
+    </div>`;
+  });
+  html += `</div><div class="rowbtns"><button class="btn pri" onclick="addType()">${t('addType')}</button></div>`;
+  return html;
+}
+
+function renderOpciones(){
+  const opts = Object.keys(I18N.es.countries).map(k=>`<option value="${k}" ${k===state.country?'selected':''}>${countryName(k)}</option>`).join('');
+  const extras = (state.extraHolidays||[]).map(h=>`<div class="cell">
+    <div class="left"><div class="name">${esc(h.name)}</div><div class="meta">${esc(h.date)}</div></div>
+    <button class="link" onclick="delExtraHol('${h.id}')">${t('delete')}</button>
+  </div>`).join('') || `<div class="cell"><div class="meta">—</div></div>`;
+  return `<div class="inset">
+    <div class="cell"><div class="name">${t('language')}</div>
+      <select onchange="state.lang=this.value;save();render()">
+        <option value="es" ${state.lang==='es'?'selected':''}>Castellano</option>
+        <option value="en" ${state.lang==='en'?'selected':''}>English</option>
+      </select></div>
+    <div class="cell"><div class="name">${t('theme')}</div>
+      <select onchange="state.theme=this.value;save();applyChrome();render()">
+        <option value="dark" ${state.theme==='dark'?'selected':''}>${t('themeDark')}</option>
+        <option value="light" ${state.theme==='light'?'selected':''}>${t('themeLight')}</option>
+      </select></div>
+    <div class="cell"><div class="left"><div class="name">${t('countryHol')}</div></div>
+      <select onchange="state.country=this.value;save();render()">${opts}</select></div>
+    <div class="cell"><div class="name">${t('weekMon')}</div>
+      <input type="checkbox" ${state.weekStartsMonday?'checked':''} onchange="state.weekStartsMonday=this.checked;save();render()"></div>
+    <div class="cell"><div class="left"><div class="name">${t('nightCounts')}</div>
+      <div class="meta">${t('nightCountsHint')}</div></div>
+      <input type="checkbox" ${state.nightIsWork?'checked':''} onchange="state.nightIsWork=this.checked;save();render()"></div>
+  </div>
+  <div class="group-title">${t('extraHol')}</div>
+  <p style="color:var(--muted);font-size:13px;margin:0 0 8px">${t('extraHolHint')}</p>
+  <div class="inset">${extras}</div>
+  <div class="rowbtns" style="align-items:flex-end">
+    <div class="field" style="margin:0;flex:1;min-width:140px"><label>${t('holDate')}</label><input type="date" id="xhDate"></div>
+    <div class="field" style="margin:0;flex:2;min-width:160px"><label>${t('holName')}</label><input id="xhName" placeholder="${t('holName')}"></div>
+    <button class="btn pri" onclick="addExtraHol()">${t('addHol')}</button>
+  </div>
+  <div class="group-title">${t('sbTitle')}</div>
+  <p style="color:var(--muted);font-size:13px;margin:0 0 8px">${t('sbHint')}</p>
+  <div class="inset">
+    <div class="cell"><div class="name">${t('sbUrl')}</div><input id="sbUrl" value="${esc(state.sb?.url||'')}" onchange="setSb('url',this.value)" style="max-width:280px;background:var(--fill-2);border:0;border-radius:8px;padding:8px"></div>
+    <div class="cell"><div class="name">${t('sbKey')}</div><input id="sbKey" type="password" value="${esc(state.sb?.key||'')}" onchange="setSb('key',this.value)" style="max-width:280px;background:var(--fill-2);border:0;border-radius:8px;padding:8px"></div>
+  </div>
+  <div class="rowbtns">
+    <button class="btn pri" onclick="saveToSupabase(true)">${t('sbSave')}</button>
+    <button class="btn" onclick="loadFromSupabase()">${t('sbLoad')}</button>
+  </div>
+  <div class="group-title">${t('ghTitle')}</div>
+  <p style="color:var(--muted);font-size:13px;margin:0 0 8px">${t('ghHint')}</p>
+  <div class="inset">
+    <div class="cell"><div class="name">${t('ghOwner')}</div><input id="ghOwner" value="${esc(state.gh?.owner||'')}" onchange="setGh('owner',this.value)" style="max-width:180px;background:var(--fill-2);border:0;border-radius:8px;padding:8px"></div>
+    <div class="cell"><div class="name">${t('ghRepo')}</div><input id="ghRepo" value="${esc(state.gh?.repo||'')}" onchange="setGh('repo',this.value)" style="max-width:180px;background:var(--fill-2);border:0;border-radius:8px;padding:8px"></div>
+    <div class="cell"><div class="name">${t('ghPath')}</div><input id="ghPath" value="${esc(state.gh?.path||'data/plan.json')}" onchange="setGh('path',this.value)" style="max-width:200px;background:var(--fill-2);border:0;border-radius:8px;padding:8px"></div>
+    <div class="cell"><div class="name">${t('ghBranch')}</div><input id="ghBranch" value="${esc(state.gh?.branch||'main')}" onchange="setGh('branch',this.value)" style="max-width:120px;background:var(--fill-2);border:0;border-radius:8px;padding:8px"></div>
+    <div class="cell"><div class="name">${t('ghToken')}</div><input id="ghToken" type="password" value="${esc(state.gh?.token||'')}" onchange="setGh('token',this.value)" style="max-width:220px;background:var(--fill-2);border:0;border-radius:8px;padding:8px"></div>
+  </div>
+  <div class="rowbtns">
+    <button class="btn pri" onclick="saveToGitHub(true)">${t('ghSave')}</button>
+    <button class="btn" onclick="loadFromGitHub()">${t('ghLoad')}</button>
+  </div>
+  <div class="group-title">${t('exportImport')}</div>
+  <p style="color:var(--muted);font-size:13px;margin:0 0 8px">${t('folderHint')}</p>
+  <div class="rowbtns">
+    <button class="btn pri" onclick="pickFolder()">${t('pickFolder')}</button>
+    <button class="btn" onclick="exportJSON()">${t('downloadJson')}</button>
+    <button class="btn" onclick="importFromFolderOrFile()">${t('importJson')}</button>
+    <span id="folderStatus" style="font-size:12px;color:var(--muted);align-self:center">${dirHandle?t('folderOk'):t('noFolder')}</span>
+  </div>
+  <input id="imp" type="file" accept="application/json" style="display:none" onchange="importJSON(event)">
+  <div class="group-title">${t('calSection')}</div>
+  <div class="rowbtns">
+    <button class="btn pri" onclick="exportICS()">${t('downloadIcs')}</button>
+    <button class="btn" onclick="toGoogle()">${t('openGoogle')}</button>
+    <button class="btn" onclick="importGoogleCal()">${t('gcalImport')}</button>
+    <button class="btn" onclick="printPlan()">${t('printPdf')}</button>
+  </div>
+  <input id="icsImp" type="file" accept=".ics,text/calendar" style="display:none" onchange="importICSFile(event)">
+  <p style="color:var(--muted);font-size:13px;margin-top:12px">${t('googleHint')}</p>
+  <div class="group-title">${t('avKey')}</div>
+  <p style="color:var(--muted);font-size:13px;margin:0 0 8px">${t('avKeyHint')}</p>
+  <div class="field"><input id="avKey" value="${esc(state.aviationKey||'')}" placeholder="aviationstack access_key" onchange="state.aviationKey=this.value.trim();save()"></div>`;
+}
+
+function esc(s){ return String(s||'').replace(/[&<>"']/g,c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+
+function addExtraHol(){
+  const date = document.getElementById('xhDate').value;
+  const name = document.getElementById('xhName').value.trim();
+  if (!date || !name) return;
+  state.extraHolidays = state.extraHolidays || [];
+  state.extraHolidays.push({id:uid(), date, name});
+  save(); render();
+}
+function delExtraHol(id){
+  state.extraHolidays = (state.extraHolidays||[]).filter(h=>h.id!==id);
+  save(); render();
+}
+function addType(){
+  state.types.push({id:uid(), name:t('newType'), color:'#ff375f'});
+  save(); render();
+}
+function updType(id,k,v){
+  const t = typeById(id); if(!t) return; t[k]=v; save(); render();
+}
+function delType(id){
+  if (!confirm(t('delTypeQ'))) return;
+  state.types = state.types.filter(t=>t.id!==id); save(); render();
+}
+
+function openDay(ds){
+  const hol = holMap()[ds];
+  const evs = eventsOn(ds);
+  const night = evs.some(e=>e.night);
+  let html = `<h2>${ds}</h2>`;
+  if (hol) html += `<p style="color:var(--red);margin:0 0 8px">${t('holiday')}: ${esc(hol)}</p>`;
+  html += `<label style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
+    <input type="checkbox" ${night?'checked':''} onchange="toggleNight('${ds}',this.checked)"> ${t('nightShift')}</label>`;
+  if (!evs.length) html += `<p style="color:var(--muted)">${t('noEvents')}</p>`;
+  evs.forEach(e=>{
+    const tp = typeById(e.typeId);
+    html += `<div class="evcard" style="border-color:${tp?tp.color:'#888'}">
+      <strong>${esc(tp?tp.name:t('typeDeleted'))}</strong>
+      <div style="margin:6px 0">
+        <select onchange="setStatus('${e.id}',this.value)">
+          <option value="planificado" ${e.status==='planificado'?'selected':''}>${t('stPlanned')}</option>
+          <option value="comunicado" ${e.status==='comunicado'?'selected':''}>${t('stComm')}</option>
+          <option value="aprobado" ${e.status==='aprobado'?'selected':''}>${t('stApr')}</option>
+        </select>
+      </div>
+      <textarea rows="2" placeholder="${t('notesPh')}" onchange="setNote('${e.id}',this.value)">${esc(e.note||'')}</textarea>
+      <div class="rowbtns"><button class="btn danger" onclick="delEvent('${e.id}','${ds}')">${t('remove')}</button></div>
+    </div>`;
+  });
+  const opts = state.types.map(tp=>`<option value="${tp.id}">${esc(tp.name)}</option>`).join('');
+  html += `<div class="group-title">${t('addEvent')}</div>
+    <div class="field"><label>${t('type')}</label><select id="newType">${opts}</select></div>
+    <div class="field"><label>${t('note')}</label><textarea id="newNote" rows="2"></textarea></div>
+    <div class="rowbtns">
+      <button class="btn pri" onclick="addEvent('${ds}')">${t('add')}</button>
+      <button class="btn" onclick="closeSheet()">${t('close')}</button>
+    </div>`;
+  document.getElementById('sheetBox').innerHTML = html;
+  document.getElementById('sheet').classList.add('on');
+}
+function closeSheet(){ document.getElementById('sheet').classList.remove('on'); }
+
+function addEvent(ds){
+  const typeId = document.getElementById('newType').value;
+  const note = document.getElementById('newNote').value;
+  const night = eventsOn(ds).some(e=>e.night);
+  state.events.push({id:uid(), date:ds, typeId, status:'planificado', note, night});
+  save(); closeSheet(); render();
+}
+function delEvent(id,ds){
+  state.events = state.events.filter(e=>e.id!==id);
+  save(); openDay(ds); render();
+}
+function setStatus(id,st){
+  const e = state.events.find(x=>x.id===id); if(e){ e.status=st; save(); render(); }
+}
+function setNote(id,n){
+  const e = state.events.find(x=>x.id===id); if(e){ e.note=n; save(); }
+}
+function toggleNight(ds, on){
+  const evs = eventsOn(ds);
+  if (evs.length) evs.forEach(e=>e.night=on);
+  else state.events.push({id:uid(), date:ds, typeId:state.types[0]?.id||'vac', status:'planificado', note:'Turno noche', night:on});
+  save(); render();
+}
+
+let dirHandle = null;
+const IDB = 'planAnual.dir';
+function idbSet(h){
+  return new Promise((res,rej)=>{
+    const r = indexedDB.open(IDB,1);
+    r.onupgradeneeded = () => r.result.createObjectStore('k');
+    r.onsuccess = () => { const tx=r.result.transaction('k','readwrite'); tx.objectStore('k').put(h,'dir'); tx.oncomplete=()=>res(); };
+    r.onerror = () => rej(r.error);
+  });
+}
+function idbGet(){
+  return new Promise((res)=>{
+    const r = indexedDB.open(IDB,1);
+    r.onupgradeneeded = () => r.result.createObjectStore('k');
+    r.onsuccess = () => { const tx=r.result.transaction('k'); const g=tx.objectStore('k').get('dir'); g.onsuccess=()=>res(g.result||null); };
+    r.onerror = () => res(null);
+  });
+}
+async function pickFolder(){
+  if (!window.showDirectoryPicker) { alert('Tu navegador no permite elegir carpeta. Usa Chrome o Edge.'); return; }
+  try {
+    dirHandle = await window.showDirectoryPicker({mode:'readwrite'});
+    await idbSet(dirHandle);
+    render();
+  } catch(e){}
+}
+async function ensureDir(){
+  if (dirHandle) return dirHandle;
+  dirHandle = await idbGet();
+  if (!dirHandle) return null;
+  const perm = await dirHandle.queryPermission({mode:'readwrite'});
+  if (perm !== 'granted') {
+    const p = await dirHandle.requestPermission({mode:'readwrite'});
+    if (p !== 'granted') { dirHandle = null; return null; }
+  }
+  return dirHandle;
+}
+function setSb(k,v){
+  state.sb = state.sb || { url:'', key:'' };
+  state.sb[k] = String(v||'').trim();
+  save();
+}
+let sbTimer = null;
+function scheduleSbSync(){
+  if (!(state.sb && state.sb.url && state.sb.key)) return;
+  clearTimeout(sbTimer);
+  sbTimer = setTimeout(()=>saveToSupabase(false), 800);
+}
+async function sbClient(){
+  if (!window.supabase) {
+    await new Promise((res,rej)=>{
+      const s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+      s.onload = res; s.onerror = rej;
+      document.head.appendChild(s);
+    });
+  }
+  return window.supabase.createClient(state.sb.url, state.sb.key);
+}
+async function saveToSupabase(manual){
+  const s = state.sb || {};
+  if (!s.url || !s.key) { if (manual) alert(t('sbFail')+': falta URL o clave'); return; }
+  try {
+    const client = await sbClient();
+    const payload = planPayload();
+    const { error } = await client.from('plan').upsert({ id:1, data:payload, updated_at:new Date().toISOString() });
+    if (error) throw error;
+    if (manual) alert(t('sbOk'));
+  } catch(e) {
+    if (manual) alert(t('sbFail')+': '+(e.message||e));
+  }
+}
+async function loadFromSupabase(){
+  const s = state.sb || {};
+  if (!s.url || !s.key) { alert(t('sbFail')+': falta URL o clave'); return; }
+  try {
+    const client = await sbClient();
+    const { data, error } = await client.from('plan').select('data').eq('id',1).maybeSingle();
+    if (error) throw error;
+    if (data && data.data) { applyImported(data.data); alert(t('sbLoadOk')); }
+    else if (true) alert(t('sbFail')+': no hay datos');
+  } catch(e) {
+    alert(t('sbFail')+': '+(e.message||e));
+  }
+}
+
+function setGh(k,v){
+  state.gh = state.gh || { owner:'', repo:'', path:'data/plan.json', branch:'main', token:'' };
+  state.gh[k] = String(v||'').trim();
+  save();
+}
+function planPayload(){
+  return {
+    year:state.year, country:state.country, weekStartsMonday:state.weekStartsMonday,
+    nightIsWork:state.nightIsWork, theme:state.theme, lang:state.lang,
+    extraHolidays:state.extraHolidays, types:state.types, events:state.events,
+    trips:state.trips||[], aviationKey:state.aviationKey||''
+  };
+}
+let ghTimer = null;
+function scheduleGhSync(){
+  if (!(state.gh && state.gh.token && state.gh.owner && state.gh.repo)) return;
+  clearTimeout(ghTimer);
+  ghTimer = setTimeout(()=>saveToGitHub(false), 1200);
+}
+async function ghApi(method, url, body){
+  const r = await fetch(url, {
+    method,
+    headers: {
+      'Authorization': 'Bearer ' + state.gh.token,
+      'Accept': 'application/vnd.github+json',
+      'Content-Type': 'application/json'
+    },
+    body: body ? JSON.stringify(body) : undefined
+  });
+  if (!r.ok) {
+    const txt = await r.text();
+    throw new Error(r.status + ' ' + txt.slice(0,180));
+  }
+  return r.json();
+}
+async function saveToGitHub(manual){
+  const g = state.gh || {};
+  if (!g.token || !g.owner || !g.repo) {
+    if (manual) alert(t('ghFail') + ': falta token / usuario / repo');
+    return;
+  }
+  const path = g.path || 'data/plan.json';
+  const branch = g.branch || 'main';
+  const base = `https://api.github.com/repos/${encodeURIComponent(g.owner)}/${encodeURIComponent(g.repo)}/contents/${path}`;
+  try {
+    let sha = null;
+    try {
+      const cur = await ghApi('GET', base + '?ref=' + encodeURIComponent(branch));
+      sha = cur.sha;
+    } catch(e) {}
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(planPayload(), null, 2))));
+    await ghApi('PUT', base, {
+      message: 'Plan Anual ' + new Date().toISOString().slice(0,16),
+      content, branch, sha
+    });
+    if (manual) alert(t('ghOk'));
+  } catch(e) {
+    if (manual) alert(t('ghFail') + ': ' + e.message);
+  }
+}
+async function loadFromGitHub(){
+  const g = state.gh || {};
+  if (!g.token || !g.owner || !g.repo) { alert(t('ghFail') + ': falta token / usuario / repo'); return; }
+  const path = g.path || 'data/plan.json';
+  const branch = g.branch || 'main';
+  const url = `https://api.github.com/repos/${encodeURIComponent(g.owner)}/${encodeURIComponent(g.repo)}/contents/${path}?ref=${encodeURIComponent(branch)}`;
+  try {
+    const cur = await ghApi('GET', url);
+    const text = decodeURIComponent(escape(atob(cur.content.replace(/\n/g,''))));
+    applyImported(JSON.parse(text));
+    alert(t('ghLoadOk'));
+  } catch(e) {
+    alert(t('ghFail') + ': ' + e.message);
+  }
+}
+
+async function exportJSON(){
+  const payload = JSON.stringify({
+    year:state.year, country:state.country, weekStartsMonday:state.weekStartsMonday,
+    nightIsWork:state.nightIsWork, theme:state.theme, lang:state.lang,
+    extraHolidays:state.extraHolidays, types:state.types, events:state.events,
+    trips:state.trips||[], aviationKey:state.aviationKey||''
+  },null,2);
+  const name = `plan-anual-${state.year}.json`;
+  const dir = await ensureDir();
+  if (dir) {
+    try {
+      const fh = await dir.getFileHandle(name, {create:true});
+      const w = await fh.createWritable();
+      await w.write(payload);
+      await w.close();
+      alert(t('exported') + ': ' + name);
+      return;
+    } catch(e){}
+  }
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([payload],{type:'application/json'}));
+  a.download=name; a.click();
+  alert(t('exported') + ': ' + name);
+}
+function applyImported(data){
+  if (data.types) state.types = data.types;
+  if (data.events) state.events = data.events;
+  if (data.country) state.country = data.country;
+  if (data.year) state.year = data.year;
+  if (typeof data.weekStartsMonday==='boolean') state.weekStartsMonday = data.weekStartsMonday;
+  if (data.theme) state.theme = data.theme;
+  if (data.lang) state.lang = data.lang;
+  if (data.extraHolidays) state.extraHolidays = data.extraHolidays;
+  if (data.trips) state.trips = data.trips;
+  if (data.aviationKey) state.aviationKey = data.aviationKey;
+  save(); render();
+}
+function importJSON(ev){
+  const f = ev.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = () => { try { applyImported(JSON.parse(r.result)); alert(t('imported')); } catch(e){ alert(t('badJson')); } };
+  r.readAsText(f);
+}
+async function importFromFolderOrFile(){
+  const dir = await ensureDir();
+  if (dir) {
+    try {
+      let best = null, bestTime = 0;
+      for await (const [name, h] of dir.entries()) {
+        if (h.kind==='file' && /plan-anual.*\.json$/i.test(name)) {
+          const f = await h.getFile();
+          if (f.lastModified > bestTime) { best = f; bestTime = f.lastModified; }
+        }
+      }
+      if (best) {
+        const text = await best.text();
+        applyImported(JSON.parse(text));
+        alert(t('imported') + ': ' + best.name);
+        return;
+      }
+    } catch(e){}
+  }
+  document.getElementById('imp').click();
+}
+function importGoogleCal(){ document.getElementById('icsImp').click(); }
+function importICSFile(ev){
+  const f = ev.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try {
+      const text = r.result.replace(/\r\n /g,'').replace(/\n /g,'');
+      const blocks = text.split('BEGIN:VEVENT').slice(1);
+      let n = 0;
+      blocks.forEach(b => {
+        const get = k => (b.match(new RegExp(k+'[^:]*:([^\\n]+)'))||[])[1];
+        const dt = get('DTSTART');
+        if (!dt) return;
+        const date = dt.replace(/[^0-9]/g,'').slice(0,8);
+        const ds = `${date.slice(0,4)}-${date.slice(4,6)}-${date.slice(6,8)}`;
+        const sum = (get('SUMMARY')||'Google').replace(/\\,/g,',').replace(/\\n/g,' ');
+        if (state.events.some(e=>e.date===ds && (e.note||'').includes(sum))) return;
+        const typeId = state.types.find(t=>/via|trip|vac/i.test(t.name))?.id || state.types[0]?.id || 'vac';
+        state.events.push({id:uid(), date:ds, typeId, status:'planificado', note:sum, night:false, fromGCal:true});
+        n++;
+      });
+      save(); render();
+      alert(t('gcalOk')+' ('+n+')');
+    } catch(e){ alert(t('gcalFail')); }
+  };
+  r.readAsText(f);
+}
+
+function icsEscape(s){ return String(s||'').replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;'); }
+function buildICS(){
+  const lines = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//PlanAnual//ES','CALSCALE:GREGORIAN'];
+  const hol = holMap();
+  Object.entries(hol).forEach(([d,name])=>{
+    const nxt = iso(addDays(new Date(d+'T12:00:00Z'),1));
+    lines.push('BEGIN:VEVENT',`UID:hol-${d}@plananual`,`DTSTAMP:${d.replace(/-/g,'')}T000000Z`,`DTSTART;VALUE=DATE:${d.replace(/-/g,'')}`,`DTEND;VALUE=DATE:${nxt.replace(/-/g,'')}`,`SUMMARY:${icsEscape(name)} (${t('holiday')})`,`TRANSP:TRANSPARENT`,'END:VEVENT');
+  });
+  state.events.filter(e=>e.date.startsWith(String(state.year))).forEach(e=>{
+    const tp = typeById(e.typeId);
+    const nxt = iso(addDays(new Date(e.date+'T12:00:00Z'),1));
+    const sum = `${tp?tp.name:t('event')}${e.night?' · '+t('night'):''} [${statusLabel(e.status)}]`;
+    lines.push('BEGIN:VEVENT',`UID:${e.id}@plananual`,`DTSTAMP:${e.date.replace(/-/g,'')}T000000Z`,`DTSTART;VALUE=DATE:${e.date.replace(/-/g,'')}`,`DTEND;VALUE=DATE:${nxt.replace(/-/g,'')}`,`SUMMARY:${icsEscape(sum)}`,`DESCRIPTION:${icsEscape(e.note||'')}`,'END:VEVENT');
+  });
+  lines.push('END:VCALENDAR');
+  return lines.join('\r\n');
+}
+function exportICS(){
+  const blob = new Blob([buildICS()], {type:'text/calendar'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=`plan-anual-${state.year}.ics`; a.click();
+}
+function toGoogle(){
+  exportICS();
+  window.open('https://calendar.google.com/calendar/u/0/r/settings/export','_blank');
+  alert(t('googleAlert'));
+}
+function printPlan(){
+  buildPrintSheet();
+  const prevTheme = state.theme;
+  document.documentElement.setAttribute('data-theme','light');
+  document.title = t('printTitle') + ' ' + state.year + ' v' + APP_VER;
+  setTimeout(() => {
+    window.print();
+    document.documentElement.setAttribute('data-theme', prevTheme==='light'?'light':'dark');
+    document.getElementById('printSheet').innerHTML = '';
+  }, 120);
+}
+function buildPrintSheet(){
+  const hol = holMap();
+  const s = stats();
+  const months = MONTHS[state.lang] || MONTHS.es;
+  let kpis = `<div class="print-kpis">
+    <span>${t('workdays')}: <b>${s.work}</b></span>
+    <span>${t('nights')}: <b>${s.nights}</b></span>
+    <span>${t('holidays')}: <b>${s.hols}</b></span>
+    <span>${t('weekends')}: <b>${s.weekends}</b></span>`;
+  Object.values(s.byType).forEach(tp => {
+    if (tp.days) kpis += `<span style="color:${tp.color}">${esc(tp.name)}: <b>${tp.days}</b> (${tp.plan}/${tp.com}/${tp.apr})</span>`;
+  });
+  kpis += `</div>`;
+  let legend = `<div class="print-legend">
+    <span><i class="sw" style="background:#ff3b30"></i> ${t('holiday')}</span>
+    <span><i class="sw" style="background:#7c5cff"></i> ${t('night')}</span>`;
+  state.types.forEach(tp => legend += `<span><i class="sw" style="background:${tp.color}"></i> ${esc(tp.name)}</span>`);
+  if ((state.trips||[]).length) legend += `<span><i class="sw" style="background:#64d2ff"></i> ✈ ${t('trips')}</span>`;
+  legend += `</div>`;
+  let table = `<table class="print-table"><thead><tr><th class="print-month">${state.year}</th>`;
+  for (let d=1; d<=31; d++) table += `<th>${d}</th>`;
+  table += `</tr></thead><tbody>`;
+  for (let m=0; m<12; m++) {
+    const dim = new Date(state.year, m+1, 0).getDate();
+    table += `<tr><td class="print-month">${months[m].slice(0,3)}</td>`;
+    for (let d=1; d<=31; d++) {
+      if (d > dim) { table += `<td></td>`; continue; }
+      const ds = `${state.year}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const dt = new Date(ds+'T12:00:00');
+      const wd = ['D','L','M','X','J','V','S'][dt.getDay()];
+      const wkd = isWeekend(ds);
+      const isHol = !!hol[ds];
+      const evs = eventsOn(ds);
+      const trs = tripsOn(ds);
+      const night = evs.some(e=>e.night);
+      let cls = '';
+      let bar = '';
+      let label = '';
+      if (isHol) {
+        bar = `<span class="print-bar" style="background:#ff3b30"></span>`;
+        label = 'H';
+      }
+      else if (evs.length) {
+        const tp = typeById(evs[0].typeId);
+        bar = tp ? `<span class="print-bar" style="background:${tp.color}"></span>` : '';
+        cls += ' print-event';
+        label = (tp ? tp.name.slice(0,2).toUpperCase() : 'E');
+      } else if (trs.length) {
+        bar = `<span class="print-bar" style="background:#64d2ff"></span>`;
+        label = '✈';
+      } else if (wkd) cls += ' print-wknd';
+      if (night) cls += ' print-night';
+      const title = [isHol?hol[ds]:'', ...evs.map(e=>{const tp=typeById(e.typeId); return tp?tp.name:''}), ...trs.map(tr=>tr.name||tr.dest)].filter(Boolean).join(' · ');
+      table += `<td class="${cls}" title="${esc(title)}"><span class="print-wd">${wd}</span>${label}${bar}</td>`;
+    }
+    table += `</tr>`;
+  }
+  table += `</tbody></table>`;
+  let tripHtml = '';
+  const trips = (state.trips||[]).filter(tr => tr.start && tr.end && (tr.start.startsWith(String(state.year)) || tr.end.startsWith(String(state.year))));
+  if (trips.length) {
+    tripHtml = `<div class="print-trips"><b>${t('tripSummary')}</b><table><tr><th>${t('tripName')}</th><th>${t('dest')}</th><th>${t('from')}</th><th>${t('to')}</th><th>${t('flights')}</th></tr>`;
+    trips.forEach(tr => {
+      const fl = (tr.flights||[]).map(f=>`${f.number||''} ${f.from||''}→${f.to||''}`).filter(s=>s.trim()).join(', ');
+      tripHtml += `<tr><td>${esc(tr.name||'')}</td><td>${esc(tr.dest||'')}</td><td>${tr.start}</td><td>${tr.end}</td><td>${esc(fl)}</td></tr>`;
+    });
+    tripHtml += `</table></div>`;
+  }
+  document.getElementById('printSheet').innerHTML =
+    `<div class="print-head"><div class="print-title">${t('printTitle')} ${state.year} · ${countryName(state.country)} · v${APP_VER}</div>${kpis}</div>${legend}${table}${tripHtml}`;
+}
+
+function tripsOn(ds){
+  return (state.trips||[]).filter(tr => tr.start && tr.end && ds >= tr.start && ds <= tr.end);
+}
+function tripById(id){ return (state.trips||[]).find(x=>x.id===id); }
+function daysInRange(a,b){
+  const out=[]; if(!a||!b||b<a) return out;
+  for(let d=new Date(a+'T12:00:00'); iso(d)<=b; d.setDate(d.getDate()+1)) out.push(iso(d));
+  return out;
+}
+function renderViajes(){
+  const list = (state.trips||[]).slice().sort((a,b)=>(a.start||'').localeCompare(b.start||''));
+  let html = `<p style="color:var(--muted);font-size:14px">${t('onCal')}</p>
+    <div class="rowbtns"><button class="btn pri" onclick="openTrip()">${t('newTrip')}</button></div>`;
+  if (!list.length) html += `<div class="inset"><div class="cell"><div class="meta">${t('noTrips')}</div></div></div>`;
+  list.forEach(tr=>{
+    const n = daysInRange(tr.start,tr.end).length;
+    const fl = (tr.flights||[]).map(f=>`${f.number||''} ${f.from||''}→${f.to||''}`).filter(s=>s.trim()).join(' · ');
+    html += `<div class="inset" style="margin-bottom:12px">
+      <div class="cell" onclick="openTrip('${tr.id}')" style="cursor:pointer">
+        <div class="left"><div class="name">✈ ${esc(tr.name||tr.dest||t('trips'))}</div>
+        <div class="meta">${tr.start||'—'} → ${tr.end||'—'} · ${n} ${t('tripDays')}${tr.dest?' · '+esc(tr.dest):''}${fl?' · '+esc(fl):''}</div></div>
+        <span class="chev">›</span>
+      </div></div>`;
+  });
+  return html;
+}
+function openTrip(id){
+  const tr = id ? tripById(id) : {id:uid(), name:'', dest:'', start:'', end:'', flights:[], dayNotes:{}, weather:null};
+  if (id && !tr) return;
+  window._tripDraft = JSON.parse(JSON.stringify(tr));
+  paintTripSheet();
+  document.getElementById('sheet').classList.add('on');
+  if (tr.dest && tr.start && tr.end) loadWeather(window._tripDraft);
+}
+function paintTripSheet(){
+  const tr = window._tripDraft;
+  const days = daysInRange(tr.start, tr.end);
+  let flHtml = (tr.flights||[]).map((f,i)=>`<div class="evcard" style="border-color:#64d2ff">
+    <div class="field"><label>${t('flightNo')}</label><input value="${esc(f.number||'')}" onchange="_tripDraft.flights[${i}].number=this.value"></div>
+    <div class="rowbtns">
+      <div class="field" style="flex:1"><label>${t('depAirport')}</label><input value="${esc(f.from||'')}" onchange="_tripDraft.flights[${i}].from=this.value.toUpperCase()"></div>
+      <div class="field" style="flex:1"><label>${t('arrAirport')}</label><input value="${esc(f.to||'')}" onchange="_tripDraft.flights[${i}].to=this.value.toUpperCase()"></div>
+    </div>
+    <div class="rowbtns">
+      <div class="field" style="flex:1"><label>${t('depTime')}</label><input type="datetime-local" value="${esc(f.dep||'')}" onchange="_tripDraft.flights[${i}].dep=this.value"></div>
+      <div class="field" style="flex:1"><label>${t('arrTime')}</label><input type="datetime-local" value="${esc(f.arr||'')}" onchange="_tripDraft.flights[${i}].arr=this.value"></div>
+    </div>
+    <button class="btn danger" onclick="_tripDraft.flights.splice(${i},1);paintTripSheet()">${t('remove')}</button>
+  </div>`).join('');
+  let notes = days.map(d=>`<div class="field"><label>${d}${tr.weather&&tr.weather[d]?' · '+tr.weather[d]:''}</label>
+    <textarea rows="2" onchange="_tripDraft.dayNotes=Object.assign(_tripDraft.dayNotes||{},{'${d}':this.value})">${esc((tr.dayNotes||{})[d]||'')}</textarea></div>`).join('');
+  document.getElementById('sheetBox').innerHTML = `<h2>✈ ${esc(tr.name||t('newTrip'))}</h2>
+    <div class="field"><label>${t('tripName')}</label><input value="${esc(tr.name||'')}" onchange="_tripDraft.name=this.value"></div>
+    <div class="field"><label>${t('dest')}</label><input id="tripDest" value="${esc(tr.dest||'')}" onchange="_tripDraft.dest=this.value"></div>
+    <div class="rowbtns">
+      <div class="field" style="flex:1"><label>${t('from')}</label><input type="date" value="${esc(tr.start||'')}" onchange="_tripDraft.start=this.value;paintTripSheet()"></div>
+      <div class="field" style="flex:1"><label>${t('to')}</label><input type="date" value="${esc(tr.end||'')}" onchange="_tripDraft.end=this.value;paintTripSheet()"></div>
+    </div>
+    <div class="group-title">${t('flights')}</div>
+    <div class="rowbtns">
+      <input id="lkNum" placeholder="IB6455" style="flex:1;background:var(--fill-2);border:0;border-radius:10px;padding:10px">
+      <input id="lkDate" type="date" style="background:var(--fill-2);border:0;border-radius:10px;padding:10px">
+      <button class="btn" onclick="lookupFlight()">${t('lookupFlight')}</button>
+    </div>
+    ${flHtml}
+    <button class="btn" onclick="addBlankFlight()">${t('addFlight')}</button>
+    <div class="group-title">${t('weather')}</div>
+    <div id="wxBox" class="inset"><div class="cell"><div class="meta">${t('weatherLoading')}</div></div></div>
+    <button class="btn" style="margin-top:8px" onclick="loadWeather(_tripDraft)">${t('weather')}</button>
+    <div class="group-title">${t('dayPlan')}</div>
+    ${notes||'<p style="color:var(--muted)">—</p>'}
+    <div class="rowbtns">
+      <button class="btn pri" onclick="commitTrip()">${t('saveTrip')}</button>
+      ${tripById(tr.id)?`<button class="btn danger" onclick="delTrip('${tr.id}')">${t('deleteTrip')}</button>`:''}
+      <button class="btn" onclick="closeSheet()">${t('close')}</button>
+    </div>`;
+  renderWx(tr);
+}
+function addBlankFlight(){
+  window._tripDraft.flights = window._tripDraft.flights||[];
+  window._tripDraft.flights.push({id:uid(), number:'', from:'', to:'', dep:'', arr:''});
+  paintTripSheet();
+}
+function commitTrip(){
+  const tr = window._tripDraft;
+  if (!tr.start || !tr.end) { closeSheet(); return; }
+  state.trips = state.trips||[];
+  const i = state.trips.findIndex(x=>x.id===tr.id);
+  if (i>=0) state.trips[i]=tr; else state.trips.push(tr);
+  save(); closeSheet(); render();
+}
+function delTrip(id){
+  state.trips = (state.trips||[]).filter(x=>x.id!==id);
+  save(); closeSheet(); render();
+}
+async function lookupFlight(){
+  const num = (document.getElementById('lkNum').value||'').replace(/\s+/g,'').toUpperCase();
+  const date = document.getElementById('lkDate').value;
+  if (!num) return;
+  const key = state.aviationKey;
+  let f = {id:uid(), number:num, from:'', to:'', dep:'', arr:''};
+  if (key) {
+    try {
+      const url = `https://api.aviationstack.com/v1/flights?access_key=${encodeURIComponent(key)}&flight_iata=${encodeURIComponent(num)}${date?'&flight_date='+date:''}`;
+      const r = await fetch(url);
+      const j = await r.json();
+      const d = (j.data&&j.data[0]) || null;
+      if (d) {
+        f.from = d.departure?.iata || '';
+        f.to = d.arrival?.iata || '';
+        const dep = d.departure?.scheduled || '';
+        const arr = d.arrival?.scheduled || '';
+        f.dep = dep ? dep.slice(0,16) : '';
+        f.arr = arr ? arr.slice(0,16) : '';
+        if (f.dep) window._tripDraft.start = window._tripDraft.start || f.dep.slice(0,10);
+        if (f.arr) window._tripDraft.end = window._tripDraft.end || f.arr.slice(0,10);
+        if (d.arrival?.airport) window._tripDraft.dest = window._tripDraft.dest || d.arrival.airport;
+        alert(t('lookupOk'));
+      } else alert(t('lookupFail'));
+    } catch(e){ alert(t('lookupFail')); }
+  } else {
+    alert(t('lookupFail'));
+  }
+  window._tripDraft.flights = window._tripDraft.flights||[];
+  window._tripDraft.flights.push(f);
+  paintTripSheet();
+}
+async function geocodeCity(name){
+  const r = await fetch('https://geocoding-api.open-meteo.com/v1/search?count=1&language='+(state.lang||'es')+'&name='+encodeURIComponent(name));
+  const j = await r.json();
+  return (j.results&&j.results[0]) || null;
+}
+async function loadWeather(tr){
+  const box = document.getElementById('wxBox');
+  if (box) box.innerHTML = `<div class="cell"><div class="meta">${t('weatherLoading')}</div></div>`;
+  if (!tr.dest || !tr.start || !tr.end) { renderWx(tr); return; }
+  try {
+    const geo = await geocodeCity(tr.dest);
+    if (!geo) throw 0;
+    tr.lat = geo.latitude; tr.lon = geo.longitude;
+    const today = iso(new Date());
+    const horizon = iso(addDays(new Date(), 16));
+    const useFc = tr.start <= horizon;
+    let wx = {};
+    if (useFc) {
+      const r = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${geo.latitude}&longitude=${geo.longitude}&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=auto&start_date=${tr.start}&end_date=${tr.end}`);
+      const j = await r.json();
+      (j.daily?.time||[]).forEach((d,i)=>{
+        wx[d] = `${Math.round(j.daily.temperature_2m_min[i])}–${Math.round(j.daily.temperature_2m_max[i])}°`;
+      });
+      tr.weatherKind = 'forecast';
+    } else {
+      const years = [1,2,3];
+      const acc = {};
+      for (const y of years) {
+        const s = shiftYearDate(tr.start, -y), e = shiftYearDate(tr.end, -y);
+        const r = await fetch(`https://archive-api.open-meteo.com/v1/archive?latitude=${geo.latitude}&longitude=${geo.longitude}&start_date=${s}&end_date=${e}&daily=temperature_2m_max,temperature_2m_min&timezone=auto`);
+        const j = await r.json();
+        (j.daily?.time||[]).forEach((d,i)=>{
+          const key = d.slice(5);
+          acc[key] = acc[key] || {n:0,min:0,max:0};
+          acc[key].n++; acc[key].min += j.daily.temperature_2m_min[i]; acc[key].max += j.daily.temperature_2m_max[i];
+        });
+      }
+      daysInRange(tr.start,tr.end).forEach(d=>{
+        const a = acc[d.slice(5)];
+        if (a&&a.n) wx[d] = `${Math.round(a.min/a.n)}–${Math.round(a.max/a.n)}°`;
+      });
+      tr.weatherKind = 'avg';
+    }
+    tr.weather = wx;
+  } catch(e){ tr.weather = tr.weather||null; tr.weatherKind='fail'; }
+  renderWx(tr);
+}
+function shiftYearDate(ds, dy){
+  const d = new Date(ds+'T12:00:00');
+  d.setFullYear(d.getFullYear()+dy);
+  return iso(d);
+}
+function renderWx(tr){
+  const box = document.getElementById('wxBox');
+  if (!box) return;
+  if (tr.weatherKind==='fail') { box.innerHTML = `<div class="cell"><div class="meta">${t('weatherFail')}</div></div>`; return; }
+  if (!tr.weather) { box.innerHTML = `<div class="cell"><div class="meta">${t('weather')}</div></div>`; return; }
+  const label = tr.weatherKind==='avg' ? t('weatherAvg') : t('weatherForecast');
+  let html = `<div class="cell"><div class="meta">${label}${tr.dest?' · '+esc(tr.dest):''}</div></div>`;
+  Object.keys(tr.weather).sort().forEach(d=>{
+    html += `<div class="cell"><div class="name">${d}</div><div>${tr.weather[d]}</div></div>`;
+  });
+  box.innerHTML = html;
+}
+
+function pendingEvents(){
+  const y = String(state.year);
+  return state.events
+    .filter(e => e.date.startsWith(y) && e.status === 'planificado')
+    .sort((a,b)=>a.date.localeCompare(b.date));
+}
+function showPending(){
+  const list = pendingEvents();
+  const box = document.getElementById('pendingBox');
+  const card = document.getElementById('pendingCard');
+  let html = `<h2 style="margin:0 0 8px">${t('pendingTitle')}</h2><p style="color:var(--muted);margin:0 0 12px">${t('pendingHint')}</p>`;
+  if (!list.length) html += `<p>${t('pendingNone')}</p>`;
+  else {
+    html += `<div class="inset">`;
+    list.forEach(e=>{
+      const tp = typeById(e.typeId);
+      html += `<div class="cell"><div class="left"><div class="name">${e.date} · ${esc(tp?tp.name:t('event'))}</div>
+        <div class="meta">${esc(e.note||'')}</div></div>
+        <span class="status-pill st-plan">${t('stPlanned')}</span></div>`;
+    });
+    html += `</div>`;
+  }
+  html += `<div class="rowbtns"><button class="btn pri" onclick="document.getElementById('pendingBox').classList.remove('on')">${t('ok')}</button></div>`;
+  card.innerHTML = html;
+  box.classList.add('on');
+}
+
+load();
+render();
+setTimeout(showPending, 200);
+if (state.sb && state.sb.url && state.sb.key) loadFromSupabase();
+else if (state.gh && state.gh.token && state.gh.owner && state.gh.repo) loadFromGitHub();
+ensureDir().then(h => { if (h) importFromFolderOrFile(); });
+</script>
+</body>
+</html>
