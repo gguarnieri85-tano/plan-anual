@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="es" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="theme-color" content="#000000" />
-  <title>Plan Anual v1.5.2</title>
+  <title>Calendario Familia v1.5.3</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a84ff'/%3E%3Crect x='8' y='14' width='48' height='42' rx='6' fill='%23fff'/%3E%3Crect x='8' y='14' width='48' height='12' fill='%230055c7'/%3E%3Ccircle cx='20' cy='20' r='3' fill='%23fff'/%3E%3Ccircle cx='44' cy='20' r='3' fill='%23fff'/%3E%3Crect x='16' y='32' width='8' height='6' rx='1' fill='%230a84ff'/%3E%3Crect x='28' y='32' width='8' height='6' rx='1' fill='%2330d158'/%3E%3Crect x='40' y='32' width='8' height='6' rx='1' fill='%23ff9f0a'/%3E%3Crect x='16' y='42' width='8' height='6' rx='1' fill='%23bf5af2'/%3E%3Crect x='28' y='42' width='8' height='6' rx='1' fill='%23ff453a'/%3E%3C/svg%3E" />
   <style>
 :root, [data-theme="light"] {
@@ -166,8 +166,8 @@ button, input, select, textarea { font:inherit; color:inherit; }
         <rect x="16" y="42" width="8" height="6" rx="1" fill="#bf5af2"/>
         <rect x="28" y="42" width="8" height="6" rx="1" fill="#ff453a"/>
       </svg>
-      <span id="brandName">Plan anual</span>
-      <span id="brandVer" style="font-size:11px;color:var(--muted);font-weight:500">v1.5.2</span>
+      <span id="brandName">Calendario Familia</span>
+      <span id="brandVer" style="font-size:11px;color:var(--muted);font-weight:500">v1.5.3</span>
     </div>
     <button class="on" data-tab="plan" onclick="go('plan')" id="tab-plan">Calendario</button>
     <button data-tab="totales" onclick="go('totales')" id="tab-totales">Totales</button>
@@ -177,7 +177,7 @@ button, input, select, textarea { font:inherit; color:inherit; }
   </nav>
   <div class="maincol">
     <div class="nav-head">
-      <h1 class="large-title" id="title">Plan anual</h1>
+      <h1 class="large-title" id="title">Calendario Familia</h1>
       <button class="link" onclick="shiftYear(-1)">‹</button>
       <button class="link" id="yearBtn" onclick="void 0"></button>
       <button class="link" onclick="shiftYear(1)">›</button>
@@ -200,11 +200,11 @@ button, input, select, textarea { font:inherit; color:inherit; }
 
 <script>
 const LS = 'planAnual.v1';
-const APP_VER = '1.5.2';
+const APP_VER = '1.5.3';
 const I18N = {
   es: {
     calendar:'Calendario', totals:'Totales', types:'Tipos', options:'Opciones',
-    annualPlan:'Plan anual', eventTypes:'Tipos de evento',
+    annualPlan:'Calendario Familia', eventTypes:'Tipos de evento',
     workdays:'Días hábiles en trabajo', nights:'Noches marcadas', holidays:'Feriados',
     workdaysFull:'Días hábiles trabajando', workdaysHint:'L–V menos feriados y ausencias',
     nightShifts:'Turnos noche', weekends:'Fines de semana',
@@ -268,7 +268,7 @@ const I18N = {
     sbOk:'Guardado en Supabase', sbLoadOk:'Cargado desde Supabase', sbFail:'Error de Supabase',
     delTypeQ:'¿Eliminar este tipo? Los eventos que lo usen quedarán sin tipo.',
     googleAlert:'Se descargó el .ics. En Google Calendar usa Importar y elige el archivo.',
-    printTitle:'Plan anual',
+    printTitle:'Calendario Familia',
     countries:{ES:'España',IT:'Italia',AR:'Argentina',MX:'México',FR:'Francia',DE:'Alemania',PT:'Portugal',CO:'Colombia',CL:'Chile',US:'Estados Unidos',PE:'Perú'}
   },
   en: {
