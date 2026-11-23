@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="es" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="theme-color" content="#000000" />
-  <title>Calendario Familia v1.5.5</title>
+  <title>Calendario Familia v1.5.6</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a84ff'/%3E%3Crect x='8' y='14' width='48' height='42' rx='6' fill='%23fff'/%3E%3Crect x='8' y='14' width='48' height='12' fill='%230055c7'/%3E%3Ccircle cx='20' cy='20' r='3' fill='%23fff'/%3E%3Ccircle cx='44' cy='20' r='3' fill='%23fff'/%3E%3Crect x='16' y='32' width='8' height='6' rx='1' fill='%230a84ff'/%3E%3Crect x='28' y='32' width='8' height='6' rx='1' fill='%2330d158'/%3E%3Crect x='40' y='32' width='8' height='6' rx='1' fill='%23ff9f0a'/%3E%3Crect x='16' y='42' width='8' height='6' rx='1' fill='%23bf5af2'/%3E%3Crect x='28' y='42' width='8' height='6' rx='1' fill='%23ff453a'/%3E%3C/svg%3E" />
   <style>
 :root, [data-theme="light"] {
@@ -167,7 +167,7 @@ button, input, select, textarea { font:inherit; color:inherit; }
         <rect x="28" y="42" width="8" height="6" rx="1" fill="#ff453a"/>
       </svg>
       <span id="brandName">Calendario Familia</span>
-      <span id="brandVer" style="font-size:11px;color:var(--muted);font-weight:500">v1.5.5</span>
+      <span id="brandVer" style="font-size:11px;color:var(--muted);font-weight:500">v1.5.6</span>
     </div>
     <button class="on" data-tab="plan" onclick="go('plan')" id="tab-plan">Calendario</button>
     <button data-tab="totales" onclick="go('totales')" id="tab-totales">Totales</button>
@@ -201,7 +201,7 @@ button, input, select, textarea { font:inherit; color:inherit; }
 
 <script>
 const LS = 'planAnual.v1';
-const APP_VER = '1.5.5';
+const APP_VER = '1.5.6';
 const I18N = {
   es: {
     calendar:'Calendario', totals:'Totales', types:'Tipos', options:'Opciones',
@@ -242,13 +242,15 @@ const I18N = {
     shopping:'Compras', addItem:'Añadir', itemPh:'Qué comprar…', clearBought:'Borrar comprados',
     noItems:'Lista vacía.', bought:'Comprado',
     period:'Periodo', from:'Desde', to:'Hasta', saveTrip:'Guardar viaje',
-    flights:'Vuelos', addFlight:'Añadir vuelo a mano', lookupFlight:'Buscar por número',
+    flights:'Vuelos', addFlight:'Añadir vuelo a mano', lookupFlight:'Buscar vuelo', openGFlights:'Ver en Google Flights',
+    flightHint:'Pon código (ej. IB6455) y fecha. Con clave Aviationstack rellena aeropuertos y horarios. Google Flights abre la búsqueda.',
     flightNo:'Número de vuelo', flightDate:'Fecha', depAirport:'Origen (IATA)',
     arrAirport:'Destino (IATA)', depTime:'Salida', arrTime:'Llegada',
     noTrips:'No hay viajes planificados.', dayPlan:'Notas por día',
     weather:'Meteorología', weatherForecast:'Pronóstico', weatherAvg:'Media climática (años previos)',
     weatherLoading:'Cargando clima…', weatherFail:'No se pudo cargar el clima',
-    lookupFail:'No se encontró el vuelo. Complétalo a mano.',
+    lookupFail:'No se encontró el vuelo. Abre Google Flights o complétalo a mano.',
+    lookupNeedKey:'Sin clave Aviationstack. Abro Google Flights para que veas el vuelo. Pega aeropuertos y horarios, o añade la clave en Opciones.',
     lookupOk:'Vuelo encontrado', avKey:'Clave Aviationstack (opcional, para buscar vuelos)',
     avKeyHint:'Sin clave puedes cargar vuelos a mano. Con clave gratuita de aviationstack.com se busca por número.',
     onCal:'En el calendario anual cada viaje se marca de forma simple en todos los días del periodo.',
@@ -313,7 +315,8 @@ const I18N = {
     shopping:'Shopping', addItem:'Add', itemPh:'What to buy…', clearBought:'Clear bought',
     noItems:'Empty list.', bought:'Bought',
     period:'Period', from:'From', to:'To', saveTrip:'Save trip',
-    flights:'Flights', addFlight:'Add flight manually', lookupFlight:'Search by flight number',
+    flights:'Flights', addFlight:'Add flight manually', lookupFlight:'Search flight', openGFlights:'Open Google Flights',
+    flightHint:'Enter code (e.g. IB6455) and date. With an Aviationstack key it fills airports and times. Google Flights opens the search.',
     flightNo:'Flight number', flightDate:'Date', depAirport:'Origin (IATA)',
     arrAirport:'Destination (IATA)', depTime:'Departure', arrTime:'Arrival',
     noTrips:'No planned trips.', dayPlan:'Notes by day',
@@ -1319,10 +1322,12 @@ function paintTripSheet(){
       <div class="field" style="flex:1"><label>${t('to')}</label><input type="date" value="${esc(tr.end||'')}" onchange="_tripDraft.end=this.value;paintTripSheet()"></div>
     </div>
     <div class="group-title">${t('flights')}</div>
+    <p style="color:var(--muted);font-size:13px;margin:0 0 8px">${t('flightHint')}</p>
     <div class="rowbtns">
       <input id="lkNum" placeholder="IB6455" style="flex:1;background:var(--fill-2);border:0;border-radius:10px;padding:10px">
       <input id="lkDate" type="date" style="background:var(--fill-2);border:0;border-radius:10px;padding:10px">
-      <button class="btn" onclick="lookupFlight()">${t('lookupFlight')}</button>
+      <button class="btn pri" onclick="lookupFlight()">${t('lookupFlight')}</button>
+      <button class="btn" onclick="openGoogleFlights()">${t('openGFlights')}</button>
     </div>
     ${flHtml}
     <button class="btn" onclick="addBlankFlight()">${t('addFlight')}</button>
@@ -1360,32 +1365,51 @@ async function lookupFlight(){
   const date = document.getElementById('lkDate').value;
   if (!num) return;
   const key = state.aviationKey;
-  let f = {id:uid(), number:num, from:'', to:'', dep:'', arr:''};
-  if (key) {
-    try {
-      const url = `https://api.aviationstack.com/v1/flights?access_key=${encodeURIComponent(key)}&flight_iata=${encodeURIComponent(num)}${date?'&flight_date='+date:''}`;
-      const r = await fetch(url);
-      const j = await r.json();
-      const d = (j.data&&j.data[0]) || null;
-      if (d) {
-        f.from = d.departure?.iata || '';
-        f.to = d.arrival?.iata || '';
-        const dep = d.departure?.scheduled || '';
-        const arr = d.arrival?.scheduled || '';
-        f.dep = dep ? dep.slice(0,16) : '';
-        f.arr = arr ? arr.slice(0,16) : '';
-        if (f.dep) window._tripDraft.start = window._tripDraft.start || f.dep.slice(0,10);
-        if (f.arr) window._tripDraft.end = window._tripDraft.end || f.arr.slice(0,10);
-        if (d.arrival?.airport) window._tripDraft.dest = window._tripDraft.dest || d.arrival.airport;
-        alert(t('lookupOk'));
-      } else alert(t('lookupFail'));
-    } catch(e){ alert(t('lookupFail')); }
-  } else {
+  let f = {id:uid(), number:num, from:'', to:'', dep:'', arr:'', date};
+  if (!key) {
+    openGoogleFlights();
+    alert(t('lookupNeedKey'));
+    window._tripDraft.flights = window._tripDraft.flights||[];
+    window._tripDraft.flights.push(f);
+    paintTripSheet();
+    return;
+  }
+  try {
+    const url = `https://api.aviationstack.com/v1/flights?access_key=${encodeURIComponent(key)}&flight_iata=${encodeURIComponent(num)}${date?'&flight_date='+encodeURIComponent(date):''}&limit=1`;
+    const r = await fetch(url);
+    const j = await r.json();
+    const d = (j.data&&j.data[0]) || null;
+    if (d) {
+      f.from = (d.departure?.iata || '').toUpperCase();
+      f.to = (d.arrival?.iata || '').toUpperCase();
+      const dep = d.departure?.scheduled || d.departure?.estimated || '';
+      const arr = d.arrival?.scheduled || d.arrival?.estimated || '';
+      f.dep = dep ? dep.replace(' ', 'T').slice(0,16) : '';
+      f.arr = arr ? arr.replace(' ', 'T').slice(0,16) : '';
+      if (f.dep) window._tripDraft.start = window._tripDraft.start || f.dep.slice(0,10);
+      if (f.arr) window._tripDraft.end = window._tripDraft.end || f.arr.slice(0,10);
+      if (d.arrival?.airport) window._tripDraft.dest = window._tripDraft.dest || d.arrival.airport;
+      alert(t('lookupOk') + (f.from&&f.to ? ` (${f.from}→${f.to})` : ''));
+    } else {
+      alert(t('lookupFail'));
+      openGoogleFlights();
+    }
+  } catch(e){
     alert(t('lookupFail'));
+    openGoogleFlights();
   }
   window._tripDraft.flights = window._tripDraft.flights||[];
   window._tripDraft.flights.push(f);
   paintTripSheet();
+}
+function openGoogleFlights(){
+  const num = (document.getElementById('lkNum')?.value||'').replace(/\s+/g,'').toUpperCase();
+  const date = document.getElementById('lkDate')?.value || '';
+  const q = [num, date].filter(Boolean).join(' ');
+  const url = q
+    ? 'https://www.google.com/travel/flights?q=' + encodeURIComponent(q)
+    : 'https://www.google.com/travel/flights';
+  window.open(url, '_blank');
 }
 async function geocodeCity(name){
   const r = await fetch('https://geocoding-api.open-meteo.com/v1/search?count=1&language='+(state.lang||'es')+'&name='+encodeURIComponent(name));
