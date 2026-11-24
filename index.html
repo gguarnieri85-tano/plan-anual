@@ -726,7 +726,7 @@ function renderPlan(){
     for (let i=0;i<startPad;i++) grid += `<div class="day empty"></div>`;
     for (let d=1;d<=dim;d++){
       const ds = `${state.year}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-      const evs = eventsOn(ds);
+      const evs = eventsOn(ds).filter(e=>isTypeVisible(e.typeId));
       const wkd = isWeekend(ds);
       const isHol = !!hol[ds];
       const today = iso(new Date())===ds;
