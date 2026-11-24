@@ -1,23 +1,19 @@
-# Plan Anual
+# Plan Anual / Calendario Familia
 
-Calendario anual de trabajo, vacaciones y viajes.
+## Recuperar versiones
 
-## Supabase
-
-Crea un proyecto en [supabase.com](https://supabase.com) y ejecuta en SQL Editor:
+En Supabase → SQL Editor, ejecuta una vez:
 
 ```sql
-create table plan (
-  id int primary key default 1,
+create table if not exists plan_history (
+  id bigint generated always as identity primary key,
   data jsonb,
-  updated_at timestamptz default now()
+  saved_at timestamptz default now()
 );
-alter table plan enable row level security;
-create policy "anon full" on plan for all using (true) with check (true);
+alter table plan_history enable row level security;
+create policy "anon full" on plan_history for all using (true) with check (true);
 ```
 
-En la app (Opciones → Supabase) pega la URL del proyecto y la clave `anon`.
+Después, en la app: Opciones → Historial de versiones.
 
-## GitHub Pages
-
-Settings → Pages → Deploy from branch → `main` / root.
+Al abrir, la app carga siempre el plan más reciente de Supabase.
