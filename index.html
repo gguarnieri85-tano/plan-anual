@@ -554,7 +554,7 @@ function localSaveOnly(){
     nightIsWork:state.nightIsWork, theme:'dark', lang:state.lang,
     extraHolidays:state.extraHolidays, types:state.types, events:state.events,
     trips:state.trips||[], shopping:state.shopping||[], aviationKey:state.aviationKey||'',
-    password: state.password || PASS
+    password: state.password || PASS, annualLeave: Number(state.annualLeave)||0, prevYearDays: Number(state.prevYearDays)||0
   }));
 }
 function save(){ markDirty(); }
