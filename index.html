@@ -1349,7 +1349,7 @@ function buildPrintSheet(){
       const wd = ['D','L','M','X','J','V','S'][dt.getDay()];
       const wkd = isWeekend(ds);
       const isHol = !!hol[ds];
-      const evs = eventsOn(ds);
+      const evs = eventsOn(ds).filter(e=>isTypeVisible(e.typeId));
       const trs = tripsOn(ds);
       const night = evs.some(e=>e.night);
       let cls = '';
