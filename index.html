@@ -649,7 +649,7 @@ function applyChrome(){
     document.getElementById('btnPrint').textContent = t('printPdf');
     const be = document.getElementById('btnExport'); if (be) be.textContent = t('downloadJson');
     const bi = document.getElementById('btnImport'); if (bi) bi.textContent = t('importJson');
-    const bg = document.getElementById('btnGCal'); if (bg) bg.textContent = t('gcalUpdate');
+    const bg = document.getElementById('btnGCal'); if (bg) bg.textContent = 'Exportar a Google Calendar';
     const bv = document.getElementById('brandVer'); if (bv) bv.textContent = 'v'+APP_VER;
     if (on) document.querySelectorAll('.tabbar button').forEach(b=>b.classList.toggle('on', b.dataset.tab===on));
   }
