@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="es" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="theme-color" content="#000000" />
-  <title>Calendario Familia v1.6.4</title>
+  <title>Calendario Familia v1.6.5</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a84ff'/%3E%3Crect x='8' y='14' width='48' height='42' rx='6' fill='%23fff'/%3E%3Crect x='8' y='14' width='48' height='12' fill='%230055c7'/%3E%3Ccircle cx='20' cy='20' r='3' fill='%23fff'/%3E%3Ccircle cx='44' cy='20' r='3' fill='%23fff'/%3E%3Crect x='16' y='32' width='8' height='6' rx='1' fill='%230a84ff'/%3E%3Crect x='28' y='32' width='8' height='6' rx='1' fill='%2330d158'/%3E%3Crect x='40' y='32' width='8' height='6' rx='1' fill='%23ff9f0a'/%3E%3Crect x='16' y='42' width='8' height='6' rx='1' fill='%23bf5af2'/%3E%3Crect x='28' y='42' width='8' height='6' rx='1' fill='%23ff453a'/%3E%3C/svg%3E" />
   <style>
 :root, [data-theme="light"] {
@@ -140,7 +140,9 @@ button, input, select, textarea { font:inherit; color:inherit; }
 .logo.lg { width:56px; height:56px; margin:0 auto 12px; }
 .brand { display:flex; align-items:center; gap:10px; padding:0 8px 16px; }
 .brand span { font-weight:700; font-size:15px; color:var(--text); line-height:1.15; }
-.lock .card { text-align:center; }
+.pinpad { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:8px; }
+.pinbtn { background:var(--fill); border:0; border-radius:12px; padding:16px 0; font-size:22px; font-weight:600; color:var(--text); cursor:pointer; }
+.pinbtn:active { background:var(--fill-2); }
 
 @media print {
   @page { size: A4 landscape; margin: 6mm; }
@@ -187,10 +189,12 @@ button, input, select, textarea { font:inherit; color:inherit; }
       <rect x="8" y="14" width="48" height="12" fill="#0055c7"/>
     </svg>
     <h2>Calendario Familia</h2>
-    <p>Introduce la clave</p>
-    <input id="lockInput" type="password" placeholder="Clave" onkeydown="if(event.key==='Enter')unlock()">
+    <p>Código de 4 números</p>
+    <div id="pinDots" style="display:flex;gap:10px;justify-content:center;margin:12px 0;font-size:28px;letter-spacing:4px">····</div>
     <div class="err" id="lockErr"></div>
-    <button class="btn pri" style="width:100%" onclick="unlock()">Entrar</button>
+    <div class="pinpad">
+      ${[1,2,3,4,5,6,7,8,9,'',0,'⌫'].map(n=> n===''?`<div></div>`:`<button class="pinbtn" onclick="pinKey('${n}')">${n}</button>`).join('')}
+    </div>
   </div>
 </div>
 <div class="phone">
@@ -228,8 +232,6 @@ button, input, select, textarea { font:inherit; color:inherit; }
       <button class="link" onclick="shiftYear(-1)">‹</button>
       <button class="link" id="yearBtn" onclick="void 0"></button>
       <button class="link" onclick="shiftYear(1)">›</button>
-      <button class="link" id="btnExport" onclick="exportJSON()">Exportar</button>
-      <button class="link" id="btnImport" onclick="importFromFolderOrFile()">Importar</button>
       <button class="link" id="btnPrint" onclick="printPlan()">Imprimir PDF</button>
       <button class="link" id="btnGCal" onclick="importGoogleCal()">Google Cal</button>
     </div>
@@ -247,7 +249,7 @@ button, input, select, textarea { font:inherit; color:inherit; }
 
 <script>
 const LS = 'planAnual.v1';
-const APP_VER = '1.6.4';
+const APP_VER = '1.6.5';
 const I18N = {
   es: {
     calendar:'Calendario', totals:'Totales', types:'Tipos', options:'Opciones',
@@ -508,6 +510,7 @@ const state = {
   nightIsWork: true,
   theme: 'dark',
   password: 'Clarita',
+  pin: '1234',
   annualLeave: 0,
   prevYearDays: 0,
   lang: 'es',
@@ -535,7 +538,27 @@ function load(){
 let sbReady = false;
 let dirty = false;
 let locked = true;
-const PASS = 'Clarita';
+const PASS = '1234';
+let pinBuf = '';
+function pinKey(k){
+  if (k==='⌫') { pinBuf = pinBuf.slice(0,-1); }
+  else if (pinBuf.length < 4) pinBuf += k;
+  const dots = document.getElementById('pinDots');
+  if (dots) dots.textContent = '●'.repeat(pinBuf.length) + '·'.repeat(4-pinBuf.length);
+  document.getElementById('lockErr').textContent = '';
+  if (pinBuf.length===4) {
+    if (pinBuf === (state.pin || PASS)) {
+      locked = false;
+      document.getElementById('lockScreen').style.display = 'none';
+      pinBuf = '';
+      resetIdle();
+    } else {
+      document.getElementById('lockErr').textContent = 'Código incorrecto';
+      pinBuf = '';
+      if (dots) dots.textContent = '····';
+    }
+  }
+}
 let idleTimer = null;
 function markDirty(){
   dirty = true;
@@ -874,16 +897,6 @@ function renderOpciones(){
     <div class="field" style="margin:0;flex:2;min-width:160px"><label>${t('holName')}</label><input id="xhName" placeholder="${t('holName')}"></div>
     <button class="btn pri" onclick="addExtraHol()">${t('addHol')}</button>
   </div>
-  <div class="group-title">${t('exportImport')}</div>
-  <div class="rowbtns"><button class="btn" onclick="showHistory()">Historial de versiones</button></div>
-  <p style="color:var(--muted);font-size:13px;margin:0 0 8px">${t('folderHint')}</p>
-  <div class="rowbtns">
-    <button class="btn pri" onclick="pickFolder()">${t('pickFolder')}</button>
-    <button class="btn" onclick="exportJSON()">${t('downloadJson')}</button>
-    <button class="btn" onclick="importFromFolderOrFile()">${t('importJson')}</button>
-    <span id="folderStatus" style="font-size:12px;color:var(--muted);align-self:center">${dirHandle?t('folderOk'):t('noFolder')}</span>
-  </div>
-  <input id="imp" type="file" accept="application/json" style="display:none" onchange="importJSON(event)">
   <div class="group-title">${t('calSection')}</div>
   <div class="rowbtns">
     <button class="btn pri" onclick="exportICS()">${t('downloadIcs')}</button>
