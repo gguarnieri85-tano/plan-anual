@@ -719,6 +719,7 @@ function render(){
   document.getElementById('title').textContent = titles[state.tab] || t('annualPlan');
   const v = document.getElementById('view');
   if (state.tab==='plan') v.innerHTML = renderPlan();
+  else if (state.tab==='dash') { v.innerHTML = renderDash(); loadDashWeather(); }
   else if (state.tab==='totales') v.innerHTML = renderTotales();
   else if (state.tab==='viajes') v.innerHTML = renderViajes();
   else if (state.tab==='compras') v.innerHTML = renderCompras();
