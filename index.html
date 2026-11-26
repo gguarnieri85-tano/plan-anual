@@ -532,6 +532,7 @@ const state = {
   events: [],
   trips: [],
   shopping: [],
+  cleaning: [],
   aviationKey: '',
   gh: { owner:'', repo:'', path:'data/plan.json', branch:'main', token:'' },
   sb: { url:'https://vxvcqvfdigczawwlhcit.supabase.co', key:'sb_publishable_g_-D1PRrxwbV2COy7aWMRA_DOH8-dv2' },
@@ -596,7 +597,7 @@ function localSaveOnly(){
     year:state.year, country:state.country, weekStartsMonday:state.weekStartsMonday,
     nightIsWork:state.nightIsWork, theme:'dark', lang:state.lang,
     extraHolidays:state.extraHolidays, types:state.types, events:state.events,
-    trips:state.trips||[], shopping:state.shopping||[], aviationKey:state.aviationKey||'',
+    trips:state.trips||[], shopping:state.shopping||[], cleaning:state.cleaning||[], aviationKey:state.aviationKey||'',
     password: state.password || PASS, annualLeave: Number(state.annualLeave)||0, prevYearDays: Number(state.prevYearDays)||0
   }));
 }
@@ -1241,7 +1242,7 @@ function planPayload(){
     year:state.year, country:state.country, weekStartsMonday:state.weekStartsMonday,
     nightIsWork:state.nightIsWork, theme:state.theme, lang:state.lang,
     extraHolidays:state.extraHolidays, types:state.types, events:state.events,
-    trips:state.trips||[], shopping:state.shopping||[], aviationKey:state.aviationKey||'',
+    trips:state.trips||[], shopping:state.shopping||[], cleaning:state.cleaning||[], aviationKey:state.aviationKey||'',
     annualLeave: Number(state.annualLeave)||0, prevYearDays: Number(state.prevYearDays)||0
   };
 }
