@@ -562,6 +562,10 @@ function buildPinpad(){
   pad.innerHTML = keys.map(n=> n===''?`<div></div>`:`<button class="pinbtn" onclick="pinKey('${n}')">${n}</button>`).join('');
 }
 buildPinpad();
+function pinTouch(ev, k){
+  if (ev) ev.preventDefault();
+  pinKey(k);
+}
 function pinKey(k){
   if (k==='⌫') { pinBuf = pinBuf.slice(0,-1); }
   else if (pinBuf.length < 4) pinBuf += k;
