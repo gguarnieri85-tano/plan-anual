@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="es" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="theme-color" content="#000000" />
-  <title>Calendario Familia v1.7.5</title>
+  <title>Calendario Familia v1.7.6</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a84ff'/%3E%3Crect x='8' y='14' width='48' height='42' rx='6' fill='%23fff'/%3E%3Crect x='8' y='14' width='48' height='12' fill='%230055c7'/%3E%3Ccircle cx='20' cy='20' r='3' fill='%23fff'/%3E%3Ccircle cx='44' cy='20' r='3' fill='%23fff'/%3E%3Crect x='16' y='32' width='8' height='6' rx='1' fill='%230a84ff'/%3E%3Crect x='28' y='32' width='8' height='6' rx='1' fill='%2330d158'/%3E%3Crect x='40' y='32' width='8' height='6' rx='1' fill='%23ff9f0a'/%3E%3Crect x='16' y='42' width='8' height='6' rx='1' fill='%23bf5af2'/%3E%3Crect x='28' y='42' width='8' height='6' rx='1' fill='%23ff453a'/%3E%3C/svg%3E" />
   <style>
 :root, [data-theme="light"] {
@@ -141,7 +141,7 @@ button, input, select, textarea { font:inherit; color:inherit; }
 .brand { display:flex; align-items:center; gap:10px; padding:0 8px 16px; }
 .brand span { font-weight:700; font-size:15px; color:var(--text); line-height:1.15; }
 .pinpad { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:8px; }
-.pinbtn { background:var(--fill); border:0; border-radius:12px; padding:16px 0; font-size:22px; font-weight:600; color:var(--text); cursor:pointer; }
+.pinbtn { background:var(--fill); border:0; border-radius:12px; padding:16px 0; font-size:22px; font-weight:600; color:var(--text); cursor:pointer; -webkit-tap-highlight-color:transparent; touch-action:manipulation; }
 .pinbtn:active { background:var(--fill-2); }
 
 @media print {
@@ -193,18 +193,18 @@ button, input, select, textarea { font:inherit; color:inherit; }
     <div id="pinDots" style="display:flex;gap:10px;justify-content:center;margin:12px 0;font-size:28px;letter-spacing:4px">····</div>
     <div class="err" id="lockErr"></div>
     <div class="pinpad" id="pinpad">
-      <button class="pinbtn" onclick="pinKey('1')">1</button>
-      <button class="pinbtn" onclick="pinKey('2')">2</button>
-      <button class="pinbtn" onclick="pinKey('3')">3</button>
-      <button class="pinbtn" onclick="pinKey('4')">4</button>
-      <button class="pinbtn" onclick="pinKey('5')">5</button>
-      <button class="pinbtn" onclick="pinKey('6')">6</button>
-      <button class="pinbtn" onclick="pinKey('7')">7</button>
-      <button class="pinbtn" onclick="pinKey('8')">8</button>
-      <button class="pinbtn" onclick="pinKey('9')">9</button>
+      <button type="button" class="pinbtn" ontouchend="pinTouch(event,'1')" onclick="pinKey('1')">1</button>
+      <button type="button" class="pinbtn" ontouchend="pinTouch(event,'2')" onclick="pinKey('2')">2</button>
+      <button type="button" class="pinbtn" ontouchend="pinTouch(event,'3')" onclick="pinKey('3')">3</button>
+      <button type="button" class="pinbtn" ontouchend="pinTouch(event,'4')" onclick="pinKey('4')">4</button>
+      <button type="button" class="pinbtn" ontouchend="pinTouch(event,'5')" onclick="pinKey('5')">5</button>
+      <button type="button" class="pinbtn" ontouchend="pinTouch(event,'6')" onclick="pinKey('6')">6</button>
+      <button type="button" class="pinbtn" ontouchend="pinTouch(event,'7')" onclick="pinKey('7')">7</button>
+      <button type="button" class="pinbtn" ontouchend="pinTouch(event,'8')" onclick="pinKey('8')">8</button>
+      <button type="button" class="pinbtn" ontouchend="pinTouch(event,'9')" onclick="pinKey('9')">9</button>
       <div></div>
-      <button class="pinbtn" onclick="pinKey('0')">0</button>
-      <button class="pinbtn" onclick="pinKey('⌫')">⌫</button>
+      <button type="button" class="pinbtn" ontouchend="pinTouch(event,'0')" onclick="pinKey('0')">0</button>
+      <button type="button" class="pinbtn" ontouchend="pinTouch(event,'⌫')" onclick="pinKey('⌫')">⌫</button>
     </div>
   </div>
 </div>
@@ -262,7 +262,7 @@ button, input, select, textarea { font:inherit; color:inherit; }
 
 <script>
 const LS = 'planAnual.v1';
-const APP_VER = '1.7.5';
+const APP_VER = '1.7.6';
 const I18N = {
   es: {
     calendar:'Calendario', totals:'Totales', types:'Tipos', options:'Opciones',
@@ -675,7 +675,7 @@ function applyChrome(){
   document.documentElement.lang = state.lang==='en'?'en':'es';
   const bar = document.querySelector('.tabbar');
   if (bar) {
-    const on = document.querySelector('.tabbar button.on')?.dataset.tab;
+    const on = (document.querySelector('.tabbar button.on')||{}).dataset && document.querySelector('.tabbar button.on').dataset.tab;
     document.getElementById('tab-plan').textContent = t('calendar');
     const td = document.getElementById('tab-dash'); if (td) td.textContent = 'Dashboard';
     document.getElementById('tab-totales').textContent = t('totals');
@@ -753,10 +753,12 @@ function stats(){
 function shiftYear(n){ state.year += n; save(); render(); }
 
 function toggleMenu(){
-  document.querySelector('.tabbar')?.classList.toggle('open');
+  var bar = document.querySelector('.tabbar');
+  if (bar) bar.classList.toggle('open');
 }
 function closeMenu(){
-  document.querySelector('.tabbar')?.classList.remove('open');
+  var bar = document.querySelector('.tabbar');
+  if (bar) bar.classList.remove('open');
 }
 function go(tab){
   state.tab = tab;
@@ -831,9 +833,9 @@ async function loadDashWeather(){
     if (ds >= today && ds <= horizon) {
       const r = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,weathercode&timezone=Europe/Rome&start_date=${ds}&end_date=${ds}`);
       const j = await r.json();
-      const times = j.hourly?.time || [];
-      const temps = j.hourly?.temperature_2m || [];
-      const codes = j.hourly?.weathercode || [];
+      const times = (j.hourly && j.hourly.time) || [];
+      const temps = (j.hourly && j.hourly.temperature_2m) || [];
+      const codes = (j.hourly && j.hourly.weathercode) || [];
       if (!times.length) throw 0;
       const min = Math.round(Math.min(...temps));
       const max = Math.round(Math.max(...temps));
@@ -1143,7 +1145,7 @@ function setNote(id,n){
 function toggleNight(ds, on){
   const evs = eventsOn(ds);
   if (evs.length) evs.forEach(e=>e.night=on);
-  else state.events.push({id:uid(), date:ds, typeId:state.types[0]?.id||'vac', status:'planificado', note:'Turno noche', night:on});
+  else state.events.push({id:uid(), date:ds, typeId:(state.types[0]&&state.types[0].id)||'vac', status:'planificado', note:'Turno noche', night:on});
   save(); render();
 }
 
@@ -1262,8 +1264,8 @@ async function showHistory(){
   const list = await loadHistoryList();
   if (!list.length) { alert('No hay versiones guardadas aún. Crea la tabla plan_history en Supabase (SQL en el README).'); return; }
   const opts = list.map(h => {
-    const n = (h.data?.events||[]).length;
-    const t = (h.data?.trips||[]).length;
+    const n = ((h.data && h.data.events)||[]).length;
+    const t = ((h.data && h.data.trips)||[]).length;
     return h.saved_at + ' · ' + n + ' eventos · ' + t + ' viajes';
   }).join('\n');
   const pick = prompt('Versiones (más reciente primero). Escribe el número a restaurar (1 = más reciente):\n\n' + list.map((h,i)=> (i+1)+'. '+h.saved_at).join('\n'));
@@ -1432,7 +1434,8 @@ function importICSFile(ev){
         const ds = `${date.slice(0,4)}-${date.slice(4,6)}-${date.slice(6,8)}`;
         const sum = (get('SUMMARY')||'Google').replace(/\\,/g,',').replace(/\\n/g,' ');
         if (state.events.some(e=>e.date===ds && (e.note||'').includes(sum))) return;
-        const typeId = state.types.find(t=>/via|trip|vac/i.test(t.name))?.id || state.types[0]?.id || 'vac';
+        const found = state.types.find(t=>/via|trip|vac/i.test(t.name));
+        const typeId = (found && found.id) || (state.types[0] && state.types[0].id) || 'vac';
         state.events.push({id:uid(), date:ds, typeId, status:'planificado', note:sum, night:false, fromGCal:true});
         n++;
       });
@@ -1649,7 +1652,7 @@ function renderCompras(){
 }
 function addShopItem(){
   const inp = document.getElementById('newItem');
-  const name = (inp?.value||'').trim();
+  const name = ((inp && inp.value)||'').trim();
   if (!name) return;
   state.shopping = state.shopping || [];
   state.shopping.push({id:uid(), name, done:false});
@@ -1776,15 +1779,15 @@ async function lookupFlight(){
     const j = await r.json();
     const d = (j.data&&j.data[0]) || null;
     if (d) {
-      f.from = (d.departure?.iata || '').toUpperCase();
-      f.to = (d.arrival?.iata || '').toUpperCase();
-      const dep = d.departure?.scheduled || d.departure?.estimated || '';
-      const arr = d.arrival?.scheduled || d.arrival?.estimated || '';
+      f.from = ((d.departure && d.departure.iata) || '').toUpperCase();
+      f.to = ((d.arrival && d.arrival.iata) || '').toUpperCase();
+      const dep = (d.departure && d.departure.scheduled) || (d.departure && d.departure.estimated) || '';
+      const arr = (d.arrival && d.arrival.scheduled) || (d.arrival && d.arrival.estimated) || '';
       f.dep = dep ? dep.replace(' ', 'T').slice(0,16) : '';
       f.arr = arr ? arr.replace(' ', 'T').slice(0,16) : '';
       if (f.dep) window._tripDraft.start = window._tripDraft.start || f.dep.slice(0,10);
       if (f.arr) window._tripDraft.end = window._tripDraft.end || f.arr.slice(0,10);
-      if (d.arrival?.airport) window._tripDraft.dest = window._tripDraft.dest || d.arrival.airport;
+      if ((d.arrival && d.arrival.airport)) window._tripDraft.dest = window._tripDraft.dest || d.arrival.airport;
       alert(t('lookupOk') + (f.from&&f.to ? ` (${f.from}→${f.to})` : ''));
     } else {
       alert(t('lookupFail'));
@@ -1799,8 +1802,10 @@ async function lookupFlight(){
   paintTripSheet();
 }
 function openGoogleFlights(){
-  const num = (document.getElementById('lkNum')?.value||'').replace(/\s+/g,'').toUpperCase();
-  const date = document.getElementById('lkDate')?.value || '';
+  var lkNum = document.getElementById('lkNum');
+  var lkDate = document.getElementById('lkDate');
+  const num = ((lkNum && lkNum.value)||'').replace(/\s+/g,'').toUpperCase();
+  const date = (lkDate && lkDate.value) || '';
   const q = [num, date].filter(Boolean).join(' ');
   const url = q
     ? 'https://www.google.com/travel/flights?q=' + encodeURIComponent(q)
@@ -1827,7 +1832,7 @@ async function loadWeather(tr){
     if (useFc) {
       const r = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${geo.latitude}&longitude=${geo.longitude}&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=auto&start_date=${tr.start}&end_date=${tr.end}`);
       const j = await r.json();
-      (j.daily?.time||[]).forEach((d,i)=>{
+      ((j.daily && j.daily.time)||[]).forEach((d,i)=>{
         wx[d] = `${Math.round(j.daily.temperature_2m_min[i])}–${Math.round(j.daily.temperature_2m_max[i])}°`;
       });
       tr.weatherKind = 'forecast';
@@ -1838,7 +1843,7 @@ async function loadWeather(tr){
         const s = shiftYearDate(tr.start, -y), e = shiftYearDate(tr.end, -y);
         const r = await fetch(`https://archive-api.open-meteo.com/v1/archive?latitude=${geo.latitude}&longitude=${geo.longitude}&start_date=${s}&end_date=${e}&daily=temperature_2m_max,temperature_2m_min&timezone=auto`);
         const j = await r.json();
-        (j.daily?.time||[]).forEach((d,i)=>{
+        ((j.daily && j.daily.time)||[]).forEach((d,i)=>{
           const key = d.slice(5);
           acc[key] = acc[key] || {n:0,min:0,max:0};
           acc[key].n++; acc[key].min += j.daily.temperature_2m_min[i]; acc[key].max += j.daily.temperature_2m_max[i];
