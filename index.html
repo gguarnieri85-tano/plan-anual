@@ -636,13 +636,28 @@ function sbFetch(path, opts){
   opts = opts || {};
   var headers = sbHeaders();
   if (opts.prefer) headers['Prefer'] = opts.prefer;
-  return fetch(sbUrl(path), {
-    method: opts.method || 'GET',
-    headers: headers,
-    body: opts.body ? JSON.stringify(opts.body) : undefined
-  }).then(function(r){
-    if (!r.ok) return r.text().then(function(t){ throw new Error(r.status + ' ' + t.slice(0,160)); });
-    return r.json().catch(function(){ return null; });
+  var url = sbUrl(path);
+  var method = opts.method || 'GET';
+  var body = opts.body ? JSON.stringify(opts.body) : null;
+  if (window.fetch) {
+    return fetch(url, { method: method, headers: headers, body: body }).then(function(r){
+      if (!r.ok) return r.text().then(function(t){ throw new Error(r.status + ' ' + t.slice(0,160)); });
+      return r.json().catch(function(){ return null; });
+    });
+  }
+  return new Promise(function(resolve, reject){
+    var xhr = new XMLHttpRequest();
+    xhr.open(method, url, true);
+    Object.keys(headers).forEach(function(k){ xhr.setRequestHeader(k, headers[k]); });
+    xhr.onreadystatechange = function(){
+      if (xhr.readyState !== 4) return;
+      if (xhr.status >= 200 && xhr.status < 300) {
+        try { resolve(xhr.responseText ? JSON.parse(xhr.responseText) : null); }
+        catch(e){ resolve(null); }
+      } else reject(new Error(xhr.status + ' ' + (xhr.responseText||'').slice(0,160)));
+    };
+    xhr.onerror = function(){ reject(new Error('network')); };
+    xhr.send(body);
   });
 }
 async function saveToSupabase(manual){
