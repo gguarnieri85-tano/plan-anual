@@ -578,6 +578,7 @@ function pinKey(k){
       document.getElementById('lockScreen').style.display = 'none';
       pinBuf = '';
       resetIdle();
+      if (confirm('¿Actualizar y cargar la última base de datos?')) loadFromSupabase(true);
     } else {
       document.getElementById('lockErr').textContent = 'Código incorrecto';
       pinBuf = '';
