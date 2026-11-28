@@ -696,33 +696,6 @@ function sbFetch(path, opts){
     xhr.send(body);
   });
 }
-async function saveToSupabase(manual){
-  var s = state.sb || {};
-  if (!s.url || !s.key) { if (manual) alert(t('sbFail')+': falta URL o clave'); return; }
-  try {
-    var payload = planPayload();
-    var curRows = await sbFetch('plan?id=eq.1&select=data');
-    var cur = (curRows && curRows[0]) || null;
-    var remoteN = (cur && cur.data && cur.data.events) ? cur.data.events.length : 0;
-    var localN = (payload.events||[]).length;
-    if (remoteN > 0 && localN === 0) {
-      if (manual) alert('No se guardó: el plan local está vacío y en la nube hay '+remoteN+' eventos. Recarga la página.');
-      return;
-    }
-    if (manual && remoteN > localN + 2 && !confirm('En la nube hay más eventos ('+remoteN+') que aquí ('+localN+'). ¿Pisar la nube igual?')) return;
-    var hist = (cur && cur.data && cur.data._history) ? cur.data._history.slice(0,4) : [];
-    if (cur && cur.data) hist.unshift({ at: new Date().toISOString(), data: cur.data });
-    payload._history = hist;
-    await sbFetch('plan', {
-      method: 'POST',
-      prefer: 'resolution=merge-duplicates,return=minimal',
-      body: { id:1, data:payload, updated_at:new Date().toISOString() }
-    });
-    if (manual) alert(t('sbOk'));
-  } catch(e) {
-    if (manual) alert(t('sbFail')+': '+(e.message||e));
-  }
-}
 function exitApp(){
   if (dirty) {
     if (confirm('Hay cambios sin guardar. ¿Guardar antes de salir?')) {
